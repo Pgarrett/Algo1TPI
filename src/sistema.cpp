@@ -1,5 +1,4 @@
 #include "sistema.h"
-#include <algorithm>
 
 Sistema::Sistema()
 {
@@ -11,17 +10,17 @@ Sistema::Sistema(const Campo & c, const Secuencia<Drone>& ds)
 
 const Campo & Sistema::campo() const
 {
-	return Campo();
+  return Campo();
 }
 
 EstadoCultivo Sistema::estadoDelCultivo(const Posicion & p) const
 {
-	return EstadoCultivo();
+  return EstadoCultivo();
 }
 
 const Secuencia<Drone>& Sistema::enjambreDrones() const
 {
-	return Secuencia<Drone>();
+  return Secuencia<Drone>();
 }
 
 void Sistema::crecer()
@@ -42,7 +41,7 @@ void Sistema::despegar(const Drone & d)
 
 bool Sistema::listoParaCosechar() const
 {
-	return false;
+  return false;
 }
 
 void Sistema::aterrizarYCargarBaterias(Carga b)
@@ -71,11 +70,10 @@ void Sistema::cargar(std::istream & is)
 
 bool Sistema::operator==(const Sistema & otroSistema) const
 {
-	return false;
+  return false;
 }
 
 std::ostream & operator<<(std::ostream & os, const Sistema & s)
 {
-	// TODO: insert return statement here
-	return os;
+  return os;
 }

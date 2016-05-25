@@ -10,42 +10,42 @@ Drone::Drone(ID i, const std::vector<Producto>& ps)
 
 ID Drone::id() const
 {
-	return ID();
+  return ID();
 }
 
 Carga Drone::bateria() const
 {
-	return Carga();
+  return Carga();
 }
 
 bool Drone::enVuelo() const
 {
-	return false;
+  return false;
 }
 
 const Secuencia<Posicion>& Drone::vueloRealizado() const
 {
-	return Secuencia<Posicion>();
+  return Secuencia<Posicion>();
 }
 
 Posicion Drone::posicionActual() const
 {
-	return Posicion();
+  return Posicion();
 }
 
 const Secuencia<Producto>& Drone::productosDisponibles() const
 {
-	return Secuencia<Producto>();
+  return Secuencia<Producto>();
 }
 
 bool Drone::vueloEscalerado() const
 {
-	return false;
+  return false;
 }
 
 Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
 {
-	return Secuencia<InfoVueloCruzado>();
+  return Secuencia<InfoVueloCruzado>();
 }
 
 void Drone::mostrar(std::ostream & os) const
@@ -60,12 +60,32 @@ void Drone::cargar(std::istream & is)
 {
 }
 
+void Drone::moverA(const Posicion pos)
+{
+}
+
+void Drone::setBateria(const Carga c)
+{
+}
+
+void Drone::borrarVueloRealizado()
+{
+}
+
+void Drone::cambiarPosicionActual(const Posicion p)
+{
+}
+
+void Drone::sacarProducto(const Producto p)
+{
+}
+
 bool Drone::operator==(const Drone & otroDrone) const
 {
-	return false;
+  return false;
 }
 
 std::ostream & operator<<(std::ostream & os, const Drone & d)
 {
-	return os;
+  return os;
 }

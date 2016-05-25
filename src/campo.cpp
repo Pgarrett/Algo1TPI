@@ -10,12 +10,12 @@ Campo::Campo(const Posicion &posG, const Posicion &posC)
 
 Dimension Campo::dimensiones() const
 {
-	return Dimension();
+  return Dimension();
 }
 
 Parcela Campo::contenido(const Posicion & p) const
 {
-	return Parcela();
+  return Parcela();
 }
 
 void Campo::mostrar(std::ostream & os) const
@@ -32,25 +32,25 @@ void Campo::cargar(std::istream & is)
 
 bool Campo::operator==(const Campo & otroCampo) const
 {
-	return false;
+  return false;
 }
 
 std::ostream & operator<<(std::ostream & os, const Campo & c)
 {
-	return os;
+  return os;
 }
 
 std::ostream & operator<<(std::ostream & os, const Parcela & p)
 {
-	return os;
+  return os;
 }
 
 std::ostream & operator<<(std::ostream & os, const Producto & p)
 {
-	return os;
+  return os;
 }
 
 std::ostream & operator<<(std::ostream & os, const EstadoCultivo & e)
 {
-	return os;
+  return os;
 }

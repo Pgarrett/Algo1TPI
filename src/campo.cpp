@@ -10,12 +10,12 @@ Campo::Campo(const Posicion &posG, const Posicion &posC)
 
 Dimension Campo::dimensiones() const
 {
-  return Dimension();
+  return _dimension;
 }
 
 Parcela Campo::contenido(const Posicion & p) const
 {
-  return Parcela();
+  return _grilla.parcelas[p.x][p.y];
 }
 
 void Campo::mostrar(std::ostream & os) const

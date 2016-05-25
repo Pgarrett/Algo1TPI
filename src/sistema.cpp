@@ -10,17 +10,17 @@ Sistema::Sistema(const Campo & c, const Secuencia<Drone>& ds)
 
 const Campo & Sistema::campo() const
 {
-  return Campo();
+  return _campo;
 }
 
 EstadoCultivo Sistema::estadoDelCultivo(const Posicion & p) const
 {
-  return EstadoCultivo();
+  return _estado.parcelas[p.x][p.y];
 }
 
 const Secuencia<Drone>& Sistema::enjambreDrones() const
 {
-  return Secuencia<Drone>();
+  return _enjambre;
 }
 
 void Sistema::crecer()

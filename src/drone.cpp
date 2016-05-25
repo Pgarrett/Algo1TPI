@@ -10,32 +10,32 @@ Drone::Drone(ID i, const std::vector<Producto>& ps)
 
 ID Drone::id() const
 {
-  return ID();
+  return _id;
 }
 
 Carga Drone::bateria() const
 {
-  return Carga();
+  return _bateria;
 }
 
 bool Drone::enVuelo() const
 {
-  return false;
+  return _enVuelo;
 }
 
 const Secuencia<Posicion>& Drone::vueloRealizado() const
 {
-  return Secuencia<Posicion>();
+  return _trayectoria;
 }
 
 Posicion Drone::posicionActual() const
 {
-  return Posicion();
+  return _posicionActual;
 }
 
 const Secuencia<Producto>& Drone::productosDisponibles() const
 {
-  return Secuencia<Producto>();
+  return _productos;
 }
 
 bool Drone::vueloEscalerado() const

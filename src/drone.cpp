@@ -6,6 +6,10 @@ Drone::Drone()
 
 Drone::Drone(ID i, const std::vector<Producto>& ps)
 {
+  _id = i;
+  _bateria = 100;
+  _enVuelo = false;
+  _productos = ps;
 }
 
 ID Drone::id() const
@@ -66,14 +70,18 @@ void Drone::moverA(const Posicion pos)
 
 void Drone::setBateria(const Carga c)
 {
+  _bateria = c;
 }
 
 void Drone::borrarVueloRealizado()
 {
+  _trayectoria.clear();
+  _enVuelo = false;
 }
 
 void Drone::cambiarPosicionActual(const Posicion p)
 {
+  _posicionActual = p;
 }
 
 void Drone::sacarProducto(const Producto p)

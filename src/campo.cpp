@@ -1,4 +1,8 @@
+#include<iostream>
+#include<fstream>
 #include "campo.h"
+
+using namespace std;
 
 Campo::Campo()
 {
@@ -6,6 +10,23 @@ Campo::Campo()
 
 Campo::Campo(const Posicion &posG, const Posicion &posC)
 {
+  _dimension.ancho = max(posG.x, posC.x)+1;
+  _dimension.largo = max(posG.y, posC.y)+1;
+  // Si el campo tiene solo dos parcelas, agregamos una fila para no romper el invariante AlgoDeCultivo.
+  if(_dimension.ancho * _dimension.largo == 2)
+    _dimension.largo++;
+
+  _grilla = Grilla<Parcela>(_dimension);
+
+  for(int i=0; i<_dimension.ancho; i++)
+  {
+    for(int j=0; j<_dimension.largo; j++)
+    {
+      _grilla.parcelas[posG.x][posG.y] = Cultivo;
+    }
+  }
+  _grilla.parcelas[posG.x][posG.y] = Granero;
+  _grilla.parcelas[posC.x][posC.y] = Casa;
 }
 
 Dimension Campo::dimensiones() const
@@ -13,44 +34,94 @@ Dimension Campo::dimensiones() const
   return _dimension;
 }
 
-Parcela Campo::contenido(const Posicion & p) const
+Parcela Campo::contenido(const Posicion &p) const
 {
-  return _grilla.parcelas[p.x][p.y];
+	return _grilla.parcelas[p.x][p.y];
 }
 
-void Campo::mostrar(std::ostream & os) const
+void Campo::mostrar(std::ostream &os) const
+{
+  os << "{ C ";
+  os << "[" << _dimension.ancho << "," << _dimension.largo << "] }";
+}
+
+void Campo::guardar(std::ostream &os) const
+{
+  os << "{ C ";
+  os << "[" << _dimension.ancho << "," << _dimension.largo << "] ";
+  os << "[";
+
+  for(int i=0; i<_dimension.ancho; i++)
+  {
+    os << "[";
+    os << _grilla.parcelas[i][0];
+    for(int j=1; j<_dimension.largo; j++)
+    {
+      os << "," << _grilla.parcelas[i][j];
+    }
+    os << "]";
+  }
+
+  os << "] }";
+}
+
+// TODO [Phil]
+void Campo::cargar(std::istream &is)
 {
 }
 
-void Campo::guardar(std::ostream & os) const
+bool Campo::operator==(const Campo &otroCampo) const
 {
+	if(_dimension.ancho != otroCampo.dimensiones().ancho
+    || _dimension.largo != otroCampo.dimensiones().largo)
+    return false;
+
+  for(int i=0; i<_dimension.ancho; i++)
+  {
+    for(int j=0; j<_dimension.largo; j++)
+    {
+      Posicion p;
+      p.x = i;
+      p.y = j;
+
+      if(contenido(p) != otroCampo.contenido(p))
+        return false;
+    }
+  }
+  return true;
 }
 
-void Campo::cargar(std::istream & is)
+std::ostream & operator<<(std::ostream &os, const Campo &c)
 {
+  c.mostrar(os);
+	return os;
 }
 
-bool Campo::operator==(const Campo & otroCampo) const
+std::ostream & operator<<(std::ostream &os, const Parcela &p)
 {
-  return false;
+  if(p == Casa) os << "Casa";
+  if(p == Granero) os << "Granero";
+  if(p == Cultivo) os << "Cultivo";
+	return os;
 }
 
-std::ostream & operator<<(std::ostream & os, const Campo & c)
+std::ostream & operator<<(std::ostream &os, const Producto &p)
 {
-  return os;
+  if(p == Fertilizante) os << "Fertilizante";
+  if(p == Plaguicida) os << "Plaguicida";
+  if(p == PlaguicidaBajoConsumo) os << "PlaguicidaBajoConsumo";
+  if(p == Herbicida) os << "Herbicida";
+  if(p == HerbicidaLargoAlcance) os << "HerbicidaLargoAlcance";
+	return os;
 }
 
-std::ostream & operator<<(std::ostream & os, const Parcela & p)
+std::ostream & operator<<(std::ostream &os, const EstadoCultivo &e)
 {
-  return os;
-}
-
-std::ostream & operator<<(std::ostream & os, const Producto & p)
-{
-  return os;
-}
-
-std::ostream & operator<<(std::ostream & os, const EstadoCultivo & e)
-{
-  return os;
+  if(e == RecienSembrado) os << "RecienSembrado";
+  if(e == EnCrecimiento) os << "EnCrecimiento";
+  if(e == ListoParaCosechar) os << "ListoParaCosechar";
+  if(e == ConMaleza) os << "ConMaleza";
+  if(e == ConPlaga) os << "ConPlaga";
+  if(e == NoSensado) os << "NoSensado";
+	return os;
 }

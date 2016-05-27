@@ -86,6 +86,12 @@ void Drone::cambiarPosicionActual(const Posicion p)
 
 void Drone::sacarProducto(const Producto p)
 {
+  int pos;
+  for(int i = 0; i < _productos.size(); i++)
+  {
+    if(p == _productos[i]) pos = i; //TODO buscar una manera que no tire warnings
+  }
+  _productos.erase(_productos.begin() + pos);
 }
 
 bool Drone::operator==(const Drone & otroDrone) const

@@ -23,6 +23,7 @@ private:
   Grilla<Parcela> _grilla;
 };
 
+Parcela tipoDeParcela(std::string p);
 // Definirlo usando mostrar, para poder usar << con este tipo.
 std::ostream & operator<<(std::ostream & os, const Campo & c);
 std::ostream & operator<<(std::ostream & os, const Parcela & p);

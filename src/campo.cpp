@@ -1,6 +1,8 @@
-#include<iostream>
-#include<fstream>
+#include <iostream>
+#include <fstream>
 #include "campo.h"
+#include <string.h>
+
 
 using namespace std;
 
@@ -60,14 +62,55 @@ void Campo::guardar(std::ostream &os) const
       os << "," << _grilla.parcelas[i][j];
     }
     os << "]";
+    if (i < _dimension.ancho - 1)
+    {
+      os << ", ";
+    }
   }
 
-  os << "] }";
+  os << "]}";
 }
 
-// TODO [Phil]
 void Campo::cargar(std::istream &is)
 {
+  string campo;
+  getline(is, campo, 'C');
+  getline(is, campo, '[');
+  string dimensionAncho;
+  getline(is, dimensionAncho, ',');
+  this->_dimension.ancho = atoi(dimensionAncho.c_str());
+  string dimensionLargo;
+  getline(is, dimensionLargo, ']');
+  this->_dimension.largo = atoi(dimensionLargo.c_str());
+  string basura;
+  getline(is, basura, '[');
+  string finDeParcelas;
+  char ultimaParcela = *basura.rbegin();
+  this->_grilla = Grilla<Parcela>(this->_dimension);
+  while (ultimaParcela != '}')
+  {
+    for (int i = 0; i < atoi(dimensionAncho.c_str()); i++)
+    {
+      getline(is, basura, '[');
+      string parcela;
+      getline(is, parcela, ',');
+      _grilla.parcelas[i][0] = tipoDeParcela(parcela);
+      for (int j = 1; j < atoi(dimensionLargo.c_str()); j++)
+      {
+        if (j < (atoi(dimensionLargo.c_str()) - 1))
+        {
+          getline(is, parcela, ',');
+        }
+        else
+        {
+          getline(is, parcela, ']');
+        }
+        _grilla.parcelas[i][j] = tipoDeParcela(parcela);
+      }
+    }
+    getline(is, finDeParcelas, ' ');
+    ultimaParcela = *finDeParcelas.rbegin();
+  }
 }
 
 bool Campo::operator==(const Campo &otroCampo) const
@@ -124,4 +167,11 @@ std::ostream & operator<<(std::ostream &os, const EstadoCultivo &e)
   if(e == ConPlaga) os << "ConPlaga";
   if(e == NoSensado) os << "NoSensado";
 	return os;
+}
+
+Parcela tipoDeParcela(string p)
+{
+  if (p == "Cultivo") return Cultivo;
+  if (p == "Granero") return Granero;
+  if (p == "Casa") return Casa;
 }

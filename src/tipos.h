@@ -3,8 +3,6 @@
 
 #include <iostream>
 #include <vector>
-#include <string.h>
-#include <stdlib.h>
 
 typedef int ID;
 typedef int Carga;

@@ -1,8 +1,6 @@
-#include <iostream>
-#include <fstream>
+#include<iostream>
+#include<fstream>
 #include "campo.h"
-#include <string.h>
-
 
 using namespace std;
 
@@ -47,12 +45,12 @@ void Campo::mostrar(std::ostream &os) const
   os << "[" << _dimension.ancho << "," << _dimension.largo << "] }";
 }
 
+// { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}
 void Campo::guardar(std::ostream &os) const
 {
-  os << "{ C ";
-  os << "[" << _dimension.ancho << "," << _dimension.largo << "] ";
-  os << "[";
+  os << "{ C [" << _dimension.ancho << "," << _dimension.largo << "] ";
 
+  os << "[";
   for(int i=0; i<_dimension.ancho; i++)
   {
     os << "[";
@@ -62,54 +60,24 @@ void Campo::guardar(std::ostream &os) const
       os << "," << _grilla.parcelas[i][j];
     }
     os << "]";
-    if (i < _dimension.ancho - 1)
-    {
-      os << ", ";
-    }
   }
-
   os << "]}";
 }
 
 void Campo::cargar(std::istream &is)
 {
-  string campo;
-  getline(is, campo, 'C');
-  getline(is, campo, '[');
-  string dimensionAncho;
-  getline(is, dimensionAncho, ',');
-  this->_dimension.ancho = atoi(dimensionAncho.c_str());
-  string dimensionLargo;
-  getline(is, dimensionLargo, ']');
-  this->_dimension.largo = atoi(dimensionLargo.c_str());
-  string basura;
-  getline(is, basura, '[');
-  string finDeParcelas;
-  char ultimaParcela = *basura.rbegin();
-  this->_grilla = Grilla<Parcela>(this->_dimension);
-  while (ultimaParcela != '}')
+  char b; // Para guardar basura / caracteres que no nos interesan.
+  is >> b >> b >> b >> _dimension.ancho >> b >> _dimension.largo >> b >> b;
+
+  for(int i=0; i<_dimension.ancho; i++)
   {
-    for (int i = 0; i < atoi(dimensionAncho.c_str()); i++)
+    is >> b;
+    for(int j=1; j<_dimension.largo; j++)
     {
-      getline(is, basura, '[');
       string parcela;
       getline(is, parcela, ',');
       _grilla.parcelas[i][0] = tipoDeParcela(parcela);
-      for (int j = 1; j < atoi(dimensionLargo.c_str()); j++)
-      {
-        if (j < (atoi(dimensionLargo.c_str()) - 1))
-        {
-          getline(is, parcela, ',');
-        }
-        else
-        {
-          getline(is, parcela, ']');
-        }
-        _grilla.parcelas[i][j] = tipoDeParcela(parcela);
-      }
     }
-    getline(is, finDeParcelas, ' ');
-    ultimaParcela = *finDeParcelas.rbegin();
   }
 }
 
@@ -169,9 +137,28 @@ std::ostream & operator<<(std::ostream &os, const EstadoCultivo &e)
 	return os;
 }
 
-Parcela tipoDeParcela(string p)
+Parcela tipoDeParcela(string s)
 {
-  if (p == "Cultivo") return Cultivo;
-  if (p == "Granero") return Granero;
-  if (p == "Casa") return Casa;
+  if(s == "Casa") return Casa;
+  if(s == "Granero") return Granero;
+  if(s == "Cultivo") return Cultivo;
+}
+
+Producto tipoDeProducto(string s)
+{
+  if(s == "Fertilizante") return Fertilizante;
+  if(s == "Plaguicida") return Plaguicida;
+  if(s == "PlaguicidaBajoConsumo") return PlaguicidaBajoConsumo;
+  if(s == "Herbicida") return Herbicida;
+  if(s == "HerbicidaLargoAlcance") return HerbicidaLargoAlcance;
+}
+
+EstadoCultivo estadoCultivo(string s)
+{
+  if(s == "RecienSembrado") return RecienSembrado;
+  if(s == "EnCrecimiento") return EnCrecimiento;
+  if(s == "ListoParaCosechar") return ListoParaCosechar;
+  if(s == "ConMaleza") return ConMaleza;
+  if(s == "ConPlaga") return ConPlaga;
+  if(s == "NoSensado") return NoSensado;
 }

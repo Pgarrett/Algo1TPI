@@ -5,6 +5,13 @@
 
 using namespace std;
 
+Posicion operator-(Posicion p1, const Posicion & p2)
+{
+  p1.x -= p2.x;
+  p1.y -= p2.y;
+  return p1;
+}
+
 std::ostream & operator<<(std::ostream &os, const Parcela &p)
 {
   if(p == Casa) os << "Casa";

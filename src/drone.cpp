@@ -48,7 +48,23 @@ const Secuencia<Producto>& Drone::productosDisponibles() const
 
 bool Drone::vueloEscalerado() const
 {
-  return false;
+  if(_trayectoria.size() < 3)
+    return true;
+
+  Posicion delta = _trayectoria[2]-_trayectoria[0];
+  if(abs(delta.x) != 1 || abs(delta.y) != 1)
+    return false;
+
+  Posicion delta0 = _trayectoria[1]-_trayectoria[0];
+  Posicion delta1 = _trayectoria[2]-_trayectoria[1];
+
+  for(unsigned int i=0; i<_trayectoria.size()-2; i++)
+  {
+    if((i%2 == 0 && _trayectoria[i+1]-_trayectoria[i] != delta0)
+      || (i%2 == 1 && _trayectoria[i+1]-_trayectoria[i] != delta1))
+       return false;
+  }
+  return true;
 }
 
 Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
@@ -98,6 +114,7 @@ void Drone::cargar(std::istream & is)
 
 void Drone::moverA(const Posicion pos)
 {
+  _trayectoria.push_back(pos);
 }
 
 void Drone::setBateria(const Carga c)

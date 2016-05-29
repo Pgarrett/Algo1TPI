@@ -24,7 +24,9 @@ struct Posicion
   int y;
 
   inline bool operator==(Posicion p) const { return p.x == x && p.y == y; }
+  inline bool operator!=(Posicion p) const { return p.x != x || p.y != y; }
 };
+Posicion operator-(Posicion p1, const Posicion & p2);
 
 struct Dimension
 {

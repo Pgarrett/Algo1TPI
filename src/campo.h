@@ -4,6 +4,7 @@
 #include<string.h>
 
 #include "tipos.h"
+#include "auxiliares.h"
 
 using namespace std;
 
@@ -28,11 +29,4 @@ class Campo
 };
 
 std::ostream & operator<<(std::ostream & os, const Campo & c);
-std::ostream & operator<<(std::ostream & os, const Parcela & p);
-std::ostream & operator<<(std::ostream & os, const Producto & p);
-std::ostream & operator<<(std::ostream & os, const EstadoCultivo & e);
-
-Parcela tipoDeParcela(string s);
-Producto tipoDeProducto(string s);
-EstadoCultivo estadoCultivo(string s);
 #endif // CAMPO_H_INCLUDED

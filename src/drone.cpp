@@ -1,5 +1,7 @@
 #include "drone.h"
 
+using namespace std;
+
 Drone::Drone()
 {
 }
@@ -8,8 +10,9 @@ Drone::Drone(ID i, const std::vector<Producto>& ps)
 {
   _id = i;
   _bateria = 100;
-  _enVuelo = false;
+  _trayectoria = Secuencia<Posicion>();
   _productos = ps;
+  _enVuelo = false;
 }
 
 ID Drone::id() const
@@ -54,12 +57,40 @@ Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
 
 void Drone::mostrar(std::ostream & os) const
 {
+  os << "{ D " << _id << " " << _bateria << " }";
 }
 
+// { D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}
 void Drone::guardar(std::ostream & os) const
 {
+  os << "{ D " << _id << " " << _bateria << " ";
+
+  // Trayectoria
+  os << "[";
+  for(int i=0; i<_trayectoria.size(); i++)
+  {
+    os << "[" << _trayectoria[i].x << "," << _trayectoria[i].y;
+
+    if(i < _trayectoria.size()-1)
+      os << "],";
+    else
+      os << "]";
+  }
+  os << "] ";
+
+  // Productos
+  os << "[";
+  for(int i=0; i<_productos.size(); i++)
+  {
+    os << _productos[i];
+
+    if(i < _productos.size()-1)
+      os << ", ";
+  }
+  os << "]}";
 }
 
+// TODO [Phil]
 void Drone::cargar(std::istream & is)
 {
 }

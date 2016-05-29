@@ -42,7 +42,7 @@ Parcela Campo::contenido(const Posicion &p) const
 void Campo::mostrar(std::ostream &os) const
 {
   os << "{ C ";
-  os << "[" << _dimension.ancho << "," << _dimension.largo << "] }";
+  os << "[" << _dimension.ancho << "," << _dimension.largo << "]}";
 }
 
 // { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}
@@ -55,12 +55,18 @@ void Campo::guardar(std::ostream &os) const
   {
     os << "[";
     os << _grilla.parcelas[i][0];
+
     for(int j=1; j<_dimension.largo; j++)
     {
       os << "," << _grilla.parcelas[i][j];
     }
-    os << "]";
+
+    if(i==_dimension.ancho-1)
+      os << "]";
+    else
+      os << "], ";
   }
+
   os << "]}";
 }
 
@@ -78,6 +84,7 @@ void Campo::cargar(std::istream &is)
       getline(is, parcela, ',');
       _grilla.parcelas[i][0] = tipoDeParcela(parcela);
     }
+    is >> b;
   }
 }
 

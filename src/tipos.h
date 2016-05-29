@@ -49,8 +49,11 @@ struct InfoVueloCruzado
 {
   Posicion posicion;
   int cantidadCruces;
+
+  inline bool operator<(InfoVueloCruzado i) const { return cantidadCruces < i.cantidadCruces; }
 };
 
+std::ostream & operator<<(std::ostream & os, const Posicion & p);
 std::ostream & operator<<(std::ostream & os, const Parcela & p);
 std::ostream & operator<<(std::ostream & os, const Producto & p);
 std::ostream & operator<<(std::ostream & os, const EstadoCultivo & e);

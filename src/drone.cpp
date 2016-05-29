@@ -1,5 +1,5 @@
 #include "drone.h"
-#include "auxiliares.h"
+#include "auxiliares.cpp"
 
 using namespace std;
 
@@ -69,7 +69,17 @@ bool Drone::vueloEscalerado() const
 
 Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
 {
-  return Secuencia<InfoVueloCruzado>();
+  Secuencia<InfoVueloCruzado> res = Secuencia<InfoVueloCruzado>();
+
+  if(ds.size() < 2)
+    return res;
+
+  Drone d = ds[0];
+  for(int j=0; j<d.vueloRealizado().size(); j++)
+    agregarCruces(ds, j, d.vueloRealizado()[j], res);
+
+  ordenar(res);
+  return res;
 }
 
 void Drone::mostrar(std::ostream & os) const
@@ -82,29 +92,11 @@ void Drone::guardar(std::ostream & os) const
 {
   os << "{ D " << _id << " " << _bateria << " ";
 
-  // Trayectoria
-  os << "[";
-  for(unsigned int i=0; i<_trayectoria.size(); i++)
-  {
-    os << "[" << _trayectoria[i].x << "," << _trayectoria[i].y;
+  mostrarSecuencia(os, _trayectoria);
+  os << " ";
 
-    if(i < _trayectoria.size()-1)
-      os << "],";
-    else
-      os << "]";
-  }
-  os << "] ";
-
-  // Productos
-  os << "[";
-  for(unsigned int i=0; i<_productos.size(); i++)
-  {
-    os << _productos[i];
-
-    if(i < _productos.size()-1)
-      os << ", ";
-  }
-  os << "]}";
+  mostrarSecuencia(os, _productos);
+  os << "}";
 }
 
 // TODO [Phil]
@@ -161,4 +153,32 @@ std::ostream & operator<<(std::ostream & os, const Drone & d)
 {
   d.mostrar(os);
   return os;
+}
+
+void agregarCruce(Posicion p, int cantidad, Secuencia<InfoVueloCruzado> & vs)
+{
+  for(unsigned int i=0; i<vs.size(); i++)
+  {
+    if(vs[i].posicion == p)
+    {
+      vs[i].cantidadCruces += cantidad;
+      return;
+    }
+  }
+
+  InfoVueloCruzado nuevoCruce = InfoVueloCruzado();
+  nuevoCruce.posicion = p;
+  nuevoCruce.cantidadCruces = cantidad;
+  vs.push_back(nuevoCruce);
+}
+
+void agregarCruces(Secuencia<Drone> ds, int instante, Posicion p, Secuencia<InfoVueloCruzado> & vs)
+{
+  int cruces = 0;
+  for(unsigned int i=0; i<ds.size(); i++)
+    if(ds[i].vueloRealizado()[instante] == p)
+      cruces++;
+
+  if(cruces > 1)
+    agregarCruce(p, cruces, vs);
 }

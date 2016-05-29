@@ -20,6 +20,12 @@ std::ostream & operator<<(std::ostream &os, const Parcela &p)
 	return os;
 }
 
+std::ostream & operator<<(std::ostream & os, const Posicion & p)
+{
+  os << "[" << p.x << "," << p.y << "]";
+  return os;
+}
+
 std::ostream & operator<<(std::ostream &os, const Producto &p)
 {
   if(p == Fertilizante) os << "Fertilizante";

@@ -1,4 +1,5 @@
 #include "drone.h"
+#include "auxiliares.h"
 
 using namespace std;
 
@@ -67,7 +68,7 @@ void Drone::guardar(std::ostream & os) const
 
   // Trayectoria
   os << "[";
-  for(int i=0; i<_trayectoria.size(); i++)
+  for(unsigned int i=0; i<_trayectoria.size(); i++)
   {
     os << "[" << _trayectoria[i].x << "," << _trayectoria[i].y;
 
@@ -80,7 +81,7 @@ void Drone::guardar(std::ostream & os) const
 
   // Productos
   os << "[";
-  for(int i=0; i<_productos.size(); i++)
+  for(unsigned int i=0; i<_productos.size(); i++)
   {
     os << _productos[i];
 
@@ -117,20 +118,30 @@ void Drone::cambiarPosicionActual(const Posicion p)
 
 void Drone::sacarProducto(const Producto p)
 {
-  int pos;
-  for(int i = 0; i < _productos.size(); i++)
+  for(unsigned int i = 0; i < _productos.size(); i++)
   {
-    if(p == _productos[i]) pos = i; //TODO buscar una manera que no tire warnings
+    if(p == _productos[i])
+    {
+      _productos.erase(_productos.begin() + i);
+      return;
+    }
   }
-  _productos.erase(_productos.begin() + pos);
 }
 
 bool Drone::operator==(const Drone & otroDrone) const
 {
+  if(_id == otroDrone.id()
+     && _bateria == otroDrone.bateria()
+     && _trayectoria == otroDrone.vueloRealizado()
+     && _posicionActual == otroDrone.posicionActual()
+     && _enVuelo == otroDrone.enVuelo()
+     && mismos(_productos, otroDrone.productosDisponibles()))
+      return true;
   return false;
 }
 
 std::ostream & operator<<(std::ostream & os, const Drone & d)
 {
+  d.mostrar(os);
   return os;
 }

@@ -41,7 +41,7 @@ void Sistema::despegar(const Drone & d)
 
 bool Sistema::listoParaCosechar() const
 {
-  return false;
+	return false;
 }
 
 void Sistema::aterrizarYCargarBaterias(Carga b)
@@ -70,10 +70,10 @@ void Sistema::cargar(std::istream & is)
 
 bool Sistema::operator==(const Sistema & otroSistema) const
 {
-  return false;
+	return false;
 }
 
 std::ostream & operator<<(std::ostream & os, const Sistema & s)
 {
-  return os;
+	return os;
 }

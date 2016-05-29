@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "tipos.h"
-#include "auxiliares.h"
 
 class Drone
 {

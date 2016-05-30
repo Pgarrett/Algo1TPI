@@ -79,10 +79,6 @@ inline void drone_test()
   d2.guardar(cout);
   cout << endl;
   mostrarSecuencia(cout, Drone::vuelosCruzados(ds));
-  cout << endl;
-  istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}");
-  d.cargar(iss);
-  d.guardar(cout);
-  cout << endl;
-  //TODO probar cargar un drone que tenga lista vacia de productosDisponibles
+  //istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}");
+  //d.cargar(iss);
 }

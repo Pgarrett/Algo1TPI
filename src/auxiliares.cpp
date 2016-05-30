@@ -1,5 +1,4 @@
 #include<iostream>
-#include<sstream>
 
 #include "auxiliares.h"
 
@@ -55,25 +54,4 @@ inline void ordenar(Secuencia<T> & vs)
         swap(vs[j], vs[j+1]);
     }
   }
-}
-
-inline string trim(string& str)
-{
-    size_t first = str.find_first_not_of(' ');
-    size_t last = str.find_last_not_of(' ');
-    return str.substr(first, (last-first+1));
-}
-
-inline vector<string> split(string str, char delimiter)
-{
-  vector<string> result;
-  stringstream ss(str);
-  string tok;
-
-  while(getline(ss, tok, delimiter))
-  {
-    result.push_back(trim(tok));
-  }
-
-  return result;
 }

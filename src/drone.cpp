@@ -1,6 +1,5 @@
 #include "drone.h"
 #include "auxiliares.cpp"
-#include <stdlib.h>
 
 using namespace std;
 
@@ -56,17 +55,35 @@ bool Drone::vueloEscalerado() const
   if(abs(delta.x) != 1 || abs(delta.y) != 1)
     return false;
 
-  Posicion delta0 = _trayectoria[1]-_trayectoria[0];
-  Posicion delta1 = _trayectoria[2]-_trayectoria[1];
+  vector<vector<Posicion> > delta[2];
+  delta[0] = _trayectoria[1]-_trayectoria[0];
+  delta[1] = _trayectoria[2]-_trayectoria[1];
 
-  for(unsigned int i=0; i<_trayectoria.size()-2; i++)
+  unsigned int i = 0;
+  bool esEscalera = true;
+
+  // Notemos t = _trayectoria para mejorar la legibilidad
+
+  // Pc: i == 0 && esEscalera && |t| >= 3 && delta[0] == t[1]-t[0] && delta[1] == t[2]-t[1]
+  // Qc: i == |t|-1 && (!esEscalera || (esEscalera && todos(t[i+1]-t[i] == delta[i%2], i in [0..t-1))))
+  // I: 0 <= i <= |t|-1 && (!esEscalera || (esEscalera && todos(t[j+1]-t[j] == delta[j%2], j in [0..i))))
+  // B: i < |t|-1
+  // cota: 0
+  // fv: |t|-1-i
+
+  // vale Pc
+  while(i<_trayectoria.size()-1)
   {
-    if((i%2 == 0 && _trayectoria[i+1]-_trayectoria[i] != delta0)
-      || (i%2 == 1 && _trayectoria[i+1]-_trayectoria[i] != delta1))
-       return false;
+    if(_trayectoria[i+1]-_trayectoria[i] != delta[i%2])
+       esEscalera = false;
+    i++;
   }
-  return true;
+  return esEscalera;
 }
+
+  // backup Qc: i == |t|-1 && (!esEscalera
+  //                || (esEscalera && todos((i%2 == 0 && t[i+1]-t[i] == delta0)
+  //                || (i%2 == 1 && t[i+1]-t[i] == delta1), i in [0..t-1)))
 
 Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
 {
@@ -100,28 +117,9 @@ void Drone::guardar(std::ostream & os) const
   os << "}";
 }
 
+// TODO [Phil]
 void Drone::cargar(std::istream & is)
 {
-  _trayectoria.clear();
-  _productos.clear();
-  char b;
-  is >> b >> b >> _id >> _bateria >> b;
-  while(b != ']')
-  {
-    Posicion p = Posicion();
-    is >> b >> p.x >> b >> p.y >> b;
-    _trayectoria.push_back(p);
-    is >> b;
-  }
-  is >> b;
-  string productos;
-  getline(is, productos, ']');
-  vector<string> prods = split(productos, ',');
-  for(int i = 0; i < prods.size(); i++)
-  {
-    string p = prods[i];
-    _productos.push_back(tipoDeProducto(p));
-  }
 }
 
 void Drone::moverA(const Posicion pos)
@@ -202,5 +200,3 @@ void agregarCruces(Secuencia<Drone> ds, int instante, Posicion p, Secuencia<Info
   if(cruces > 1)
     agregarCruce(p, cruces, vs);
 }
-
-

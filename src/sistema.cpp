@@ -110,18 +110,51 @@ void Sistema::guardar(std::ostream & os) const
 //  [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
 void Sistema::cargar(std::istream & is)
 {
+  // TODO clear de campo?
+  _enjambre.clear();
+  _estado.clear(); // TODO check
   char b;
   is >> b >> b;
   _campo.cargar(is);
-  string ingresaDrones;
-  getline(is, ingresaDrones, '[');
-  char ultimoDrone = *ingresaDrones.rbegin();
-  while(ultimoDrone != ']')
+  // string ingresaDrones;
+  // getline(is, ingresaDrones, '[');
+  // char ultimoDrone = *ingresaDrones.rbegin();
+  // while(ultimoDrone != ']')
+  // {
+  //   Drone droneCargado;
+  //   droneCargado.cargar(is);
+  //   _enjambre.push_back(droneCargado);
+  // }
+  string todosLosDrones;
+  getline(is, todosLosDrones, ']');
+  vector<string> drones = split(todosLosDrones, ',');
+  for(int i = 0; i < drones.size(); i++)
   {
+    stringstream droneStream(drones[i]);
     Drone droneCargado;
-    droneCargado.cargar(is);
+    droneCargado.cargar(droneStream);
     _enjambre.push_back(droneCargado);
-    
+  }
+
+  Dimension dimensionCampo = _campo.dimensiones();
+  for(int i=0; i<dimensionCampo.ancho; i++)
+  {
+    is >> b;
+    string estadoC;
+    Posicion p1;
+    p1.x = i;
+    p1.y = 0;
+    if(_campo.contenido(p1) == Cultivo)
+    {
+      //_estado.parcelas[i][0]
+    }
+    for(int j=1; j<dimensionCampo.largo; j++)
+    {
+      string parcela;
+      getline(is, parcela, ',');
+      _grilla.parcelas[i][0] = tipoDeParcela(parcela);
+    }
+    is >> b;
   }
 }
 
@@ -133,4 +166,4 @@ bool Sistema::operator==(const Sistema & otroSistema) const
 std::ostream & operator<<(std::ostream & os, const Sistema & s)
 {
 	return os;
-}
+}iostream

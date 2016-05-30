@@ -84,4 +84,5 @@ inline void drone_test()
   d.cargar(iss);
   d.guardar(cout);
   cout << endl;
+  //TODO probar cargar un drone que tenga lista vacia de productosDisponibles
 }

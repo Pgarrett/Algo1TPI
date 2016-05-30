@@ -66,6 +66,7 @@ void Sistema::mostrar(std::ostream & os) const
   }
   os << " }";
 }
+
 //{ S { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]} [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}, { D 15 46 [[0,1],[1,1][2,1][2,2]] [HerbicidaLargoAlcance, Fertilizante, Herbicida, Plaguicida]}] [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
 void Sistema::guardar(std::ostream & os) const
 {
@@ -101,8 +102,26 @@ void Sistema::guardar(std::ostream & os) const
   os << "]]}";
 }
 
+// { S 
+//  { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]} 
+//  [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}, 
+//   { D 15 46 [[0,1],[1,1][2,1][2,2]] [HerbicidaLargoAlcance, Fertilizante, Herbicida, Plaguicida]}
+//  ] 
+//  [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
 void Sistema::cargar(std::istream & is)
 {
+  char b;
+  is >> b >> b;
+  _campo.cargar(is);
+  string ingresaDrones;
+  getline(is, ingresaDrones, '[');
+  char ultimoDrone = *ingresaDrones.rbegin();
+  while(ultimoDrone != ']')
+  {
+    Drone droneCargado;
+    droneCargado.cargar(is);
+    _enjambre.push_back(droneCargado);
+  }
 }
 
 bool Sistema::operator==(const Sistema & otroSistema) const

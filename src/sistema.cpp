@@ -121,6 +121,7 @@ void Sistema::cargar(std::istream & is)
     Drone droneCargado;
     droneCargado.cargar(is);
     _enjambre.push_back(droneCargado);
+    
   }
 }
 

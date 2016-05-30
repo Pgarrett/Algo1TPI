@@ -79,6 +79,9 @@ inline void drone_test()
   d2.guardar(cout);
   cout << endl;
   mostrarSecuencia(cout, Drone::vuelosCruzados(ds));
-  //istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}");
-  //d.cargar(iss);
+  cout << endl;
+  istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}");
+  d.cargar(iss);
+  d.guardar(cout);
+  cout << endl;
 }

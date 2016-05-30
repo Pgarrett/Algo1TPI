@@ -80,7 +80,7 @@ void Campo::cargar(std::istream &is)
     {
       string parcela;
       getline(is, parcela, ',');
-      _grilla.parcelas[i][0] = tipoDeParcela(parcela);
+      _grilla.parcelas[i][j] = tipoDeParcela(parcela);
     }
     is >> b;
   }

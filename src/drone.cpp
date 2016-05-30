@@ -51,13 +51,13 @@ bool Drone::vueloEscalerado() const
   if(_trayectoria.size() < 3)
     return true;
 
-  Posicion delta = _trayectoria[2]-_trayectoria[0];
-  if(abs(delta.x) != 1 || abs(delta.y) != 1)
+  Posicion primerosTres = _trayectoria[2]-_trayectoria[0];
+  if(abs(primerosTres.x) != 1 || abs(primerosTres.y) != 1)
     return false;
 
-  vector<vector<Posicion> > delta[2];
-  delta[0] = _trayectoria[1]-_trayectoria[0];
-  delta[1] = _trayectoria[2]-_trayectoria[1];
+  vector<Posicion> delta;
+  delta.push_back(_trayectoria[1]-_trayectoria[0]);
+  delta.push_back(_trayectoria[2]-_trayectoria[1]);
 
   unsigned int i = 0;
   bool esEscalera = true;
@@ -71,7 +71,7 @@ bool Drone::vueloEscalerado() const
   // cota: 0
   // fv: |t|-1-i
 
-  // vale Pc
+  // vale Pc: i == 0 && esEscalera && |t| >= 3 && delta[0] == t[1]-t[0] && delta[1] == t[2]-t[1]
   while(i<_trayectoria.size()-1)
   {
     if(_trayectoria[i+1]-_trayectoria[i] != delta[i%2])

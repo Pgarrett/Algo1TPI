@@ -1,4 +1,9 @@
 #include "sistema.h"
+#include "auxiliares.cpp"
+#include <stdlib.h>
+#include <sstream>
+
+using namespace std;
 
 Sistema::Sistema()
 {
@@ -75,7 +80,7 @@ void Sistema::guardar(std::ostream & os) const
   os << " [";
   for(int i = 0; i < _enjambre.size(); i++)
   {
-    _enjambre[i].mostrar(os);
+    _enjambre[i].guardar(os);
     if (i < _enjambre.size() - 1)
       os << ",";
   }
@@ -87,13 +92,13 @@ void Sistema::guardar(std::ostream & os) const
     Posicion p1 = Posicion();
     p1.x = i;
     p1.y = 0;
-    os << _campo.contenido(p1);
+    os << estadoDelCultivo(p1);
     for(int j=1; j<d.largo; j++)
     {
       Posicion p2 = Posicion();
       p2.x = i;
       p2.y = 0;
-      os << "," << _campo.contenido(p2);
+      os << "," << estadoDelCultivo(p2);
     }
     if(i<d.ancho-1)
       os << "], ";
@@ -109,24 +114,14 @@ void Sistema::guardar(std::ostream & os) const
 //  [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
 void Sistema::cargar(std::istream & is)
 {
-  // TODO clear de campo?
+  _campo = Campo();
   _enjambre.clear();
-  _estado.clear(); // TODO check
   char b;
   is >> b >> b;
   _campo.cargar(is);
-  // string ingresaDrones;
-  // getline(is, ingresaDrones, '[');
-  // char ultimoDrone = *ingresaDrones.rbegin();
-  // while(ultimoDrone != ']')
-  // {
-  //   Drone droneCargado;
-  //   droneCargado.cargar(is);
-  //   _enjambre.push_back(droneCargado);
-  // }
   string todosLosDrones;
   getline(is, todosLosDrones, ']');
-  vector<string> drones = split(todosLosDrones, ',');
+  vector<string> drones = splitSys(todosLosDrones, ',');
   for(int i = 0; i < drones.size(); i++)
   {
     stringstream droneStream(drones[i]);
@@ -134,8 +129,8 @@ void Sistema::cargar(std::istream & is)
     droneCargado.cargar(droneStream);
     _enjambre.push_back(droneCargado);
   }
-
   Dimension dimensionCampo = _campo.dimensiones();
+  _estado = Grilla<EstadoCultivo>(dimensionCampo);
   for(int i=0; i<dimensionCampo.ancho; i++)
   {
     is >> b;
@@ -143,15 +138,22 @@ void Sistema::cargar(std::istream & is)
     Posicion p1;
     p1.x = i;
     p1.y = 0;
-    if(_campo.contenido(p1) == Cultivo)
-    {
-      //_estado.parcelas[i][0]
-    }
+    _estado.parcelas[i][0] = getEstadoCultivo(p1, _campo.contenido(p1), estadoC);
     for(int j=1; j<dimensionCampo.largo; j++)
     {
-      string parcela;
-      getline(is, parcela, ',');
-      _grilla.parcelas[i][0] = tipoDeParcela(parcela);
+      if (j < dimensionCampo.largo - 1)
+      {
+        getline(is, estadoC, ',');
+      }
+      else
+      {
+        getline(is, estadoC, ']');
+        is >> b;
+      }
+      Posicion p2;
+      p2.x = i;
+      p2.y = j;
+      _estado.parcelas[i][j] = getEstadoCultivo(p2, _campo.contenido(p2), estadoC);
     }
     is >> b;
   }

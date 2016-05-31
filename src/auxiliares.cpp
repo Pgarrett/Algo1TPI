@@ -1,4 +1,5 @@
 #include<iostream>
+#include<sstream>
 
 #include "auxiliares.h"
 
@@ -63,7 +64,6 @@ inline string trim(string& str)
   return str.substr(first, (last-first+1));
 }
 
-
 inline vector<string> split(string str, char delimiter)
 {
   vector<string> result;
@@ -74,4 +74,25 @@ inline vector<string> split(string str, char delimiter)
     result.push_back(trim(tok));
   }
   return result;
+}
+
+inline vector<string> splitSys(string str, char delimiter)
+{
+  vector<string> result;
+  stringstream ss(str);
+  string tok;
+  while(getline(ss, tok, delimiter))
+  {
+    result.push_back(trim(tok));
+  }
+  return result;
+}
+
+inline EstadoCultivo getEstadoCultivo(Posicion p, Parcela contenido, string estadoC)
+{
+  if(contenido == Cultivo)
+  {
+    return estadoCultivo(estadoC);
+  }
+  return NoSensado;
 }

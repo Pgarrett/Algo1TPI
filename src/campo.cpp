@@ -70,16 +70,25 @@ void Campo::guardar(std::ostream &os) const
 
 void Campo::cargar(std::istream &is)
 {
-  char b; // Para guardar basura / caracteres que no nos interesan.
+  char b;
   is >> b >> b >> b >> _dimension.ancho >> b >> _dimension.largo >> b >> b;
 
   for(int i=0; i<_dimension.ancho; i++)
   {
     is >> b;
+    string parcela;
+    getline(is, parcela, ',');
+    _grilla.parcelas[i][0] = tipoDeParcela(parcela);
     for(int j=1; j<_dimension.largo; j++)
     {
-      string parcela;
-      getline(is, parcela, ',');
+       if (j < _dimension.largo - 1)
+      {
+        getline(is, parcela, ',');
+      }
+      else
+      {
+        getline(is, parcela, ']');
+      }
       _grilla.parcelas[i][j] = tipoDeParcela(parcela);
     }
     is >> b;

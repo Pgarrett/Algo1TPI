@@ -6,6 +6,11 @@ using namespace std;
 
 Drone::Drone()
 {
+  _id = 1;
+  _bateria = 100;
+  _trayectoria = Secuencia<Posicion>();
+  _productos = Secuencia<Producto>();
+  _enVuelo = false;
 }
 
 Drone::Drone(ID i, const std::vector<Producto>& ps)
@@ -104,29 +109,27 @@ void Drone::guardar(std::ostream & os) const
   os << "}";
 }
 
-// TODO [Phil]
 void Drone::cargar(std::istream & is)
 {
-  _trayectoria.clear();
-  _productos.clear();
   char b;
-  is >> b >> b >> _id >> _bateria >> b;
+  is >> b >> b >> this->_id >> this->_bateria >> b;
   while(b != ']')
   {
-    Posicion p = Posicion();
+    Posicion p;
     is >> b >> p.x >> b >> p.y >> b;
-    _trayectoria.push_back(p);
+    this->_trayectoria.push_back(p);
     is >> b;
   }
   is >> b;
   string productos;
   getline(is, productos, ']');
-  vector<string> prods = split(productos, ',');
+  vector<string> prods = vector<string>();
+  prods = split(productos, ',');
   for(int i = 0; i < prods.size(); i++)
   {
-    string p = prods[i];
-    _productos.push_back(tipoDeProducto(p));
+    this->_productos.push_back(tipoDeProducto(prods[i]));
   }
+  is >> b;
 }
 
 void Drone::moverA(const Posicion pos)

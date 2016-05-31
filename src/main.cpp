@@ -4,8 +4,10 @@
 
 int main()
 {
-  campo_test();
+  //campo_test();
   std::cout << endl;
   drone_test();
+  std::cout << endl;
+  sistema_test();
   return 0;
 }

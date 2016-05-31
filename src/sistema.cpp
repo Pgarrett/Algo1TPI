@@ -12,6 +12,18 @@ Sistema::Sistema()
 
 Sistema::Sistema(const Campo & c, const Secuencia<Drone>& ds)
 {
+  _campo = c;
+  Dimension dimensionCampo = _campo.dimensiones();
+  _estado = Grilla<EstadoCultivo>(dimensionCampo);
+  for(int i=0; i<dimensionCampo.ancho; i++)
+  {
+    _estado.parcelas[i][0] = NoSensado;
+    for(int j=1; j<dimensionCampo.largo; j++)
+    {
+      _estado.parcelas[i][j] = NoSensado;
+    }
+  }
+  _enjambre = ds;
 }
 
 const Campo & Sistema::campo() const
@@ -115,16 +127,28 @@ void Sistema::guardar(std::ostream & os) const
 //  [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
 void Sistema::cargar(std::istream & is)
 {
-  _campo = Campo();
-  _enjambre.clear();
   char b;
   is >> b >> b;
-  _campo.cargar(is);
-  string todosLosDrones;
-  getline(is, todosLosDrones, ']');
-  vector<string> drones = splitSys(todosLosDrones, ',');
+  this->_campo.cargar(is);
+  is >> b;
+  string ingresaDrones;
+  getline(is, ingresaDrones, '[');
+  char ultimoDrone = *ingresaDrones.rbegin();
+  while(ultimoDrone != ']' && b != ']')
+  {
+    string d;
+    getline(is, d, '}');
+    d = d + '}';
+    stringstream dStream(d);
+    Drone droneCargado;
+    droneCargado.cargar(dStream);
+    this->_enjambre.push_back(droneCargado);
+    is >> b;
+    ultimoDrone = *d.rbegin();
+  }
+  is >> b;
   Dimension dimensionCampo = _campo.dimensiones();
-  _estado = Grilla<EstadoCultivo>(dimensionCampo);
+  this->_estado = Grilla<EstadoCultivo>(dimensionCampo);
   for(int i=0; i<dimensionCampo.ancho; i++)
   {
     is >> b;
@@ -132,6 +156,7 @@ void Sistema::cargar(std::istream & is)
     Posicion p1;
     p1.x = i;
     p1.y = 0;
+    getline(is, estadoC, ',');
     _estado.parcelas[i][0] = getEstadoCultivo(p1, _campo.contenido(p1), estadoC);
     for(int j=1; j<dimensionCampo.largo; j++)
     {
@@ -148,11 +173,9 @@ void Sistema::cargar(std::istream & is)
       p2.x = i;
       p2.y = j;
       _estado.parcelas[i][j] = getEstadoCultivo(p2, _campo.contenido(p2), estadoC);
-      string parcela;
-      getline(is, parcela, ',');
     }
-    is >> b;
   }
+  is >> b;
 }
 
 bool Sistema::operator==(const Sistema & otroSistema) const

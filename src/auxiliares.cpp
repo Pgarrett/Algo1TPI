@@ -1,4 +1,5 @@
 #include<iostream>
+#include<sstream>
 
 #include "auxiliares.h"
 
@@ -62,7 +63,6 @@ inline string trim(string& str)
   size_t last = str.find_last_not_of(' ');
   return str.substr(first, (last-first+1));
 }
-
 
 inline vector<string> split(string str, char delimiter)
 {

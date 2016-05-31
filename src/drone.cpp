@@ -63,16 +63,6 @@ bool Drone::vueloEscalerado() const
   unsigned int i = 0;
   bool esEscalera = true;
 
-  // Notemos t = _trayectoria para mejorar la legibilidad
-
-  // Pc: i == 0 && esEscalera && |t| >= 3 && delta[0] == t[1]-t[0] && delta[1] == t[2]-t[1]
-  // Qc: i == |t|-1 && (!esEscalera || (esEscalera && todos(t[i+1]-t[i] == delta[i%2], i in [0..t-1))))
-  // I: 0 <= i <= |t|-1 && (!esEscalera || (esEscalera && todos(t[j+1]-t[j] == delta[j%2], j in [0..i))))
-  // B: i < |t|-1
-  // cota: 0
-  // fv: |t|-1-i
-
-  // vale Pc: i == 0 && esEscalera && |t| >= 3 && delta[0] == t[1]-t[0] && delta[1] == t[2]-t[1]
   while(i<_trayectoria.size()-1)
   {
     if(_trayectoria[i+1]-_trayectoria[i] != delta[i%2])
@@ -81,10 +71,6 @@ bool Drone::vueloEscalerado() const
   }
   return esEscalera;
 }
-
-  // backup Qc: i == |t|-1 && (!esEscalera
-  //                || (esEscalera && todos((i%2 == 0 && t[i+1]-t[i] == delta0)
-  //                || (i%2 == 1 && t[i+1]-t[i] == delta1), i in [0..t-1)))
 
 Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
 {

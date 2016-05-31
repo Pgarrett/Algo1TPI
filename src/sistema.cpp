@@ -1,3 +1,4 @@
+#include<sstream>
 #include "sistema.h"
 
 Sistema::Sistema()
@@ -109,9 +110,9 @@ void Sistema::guardar(std::ostream & os) const
 //  [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
 void Sistema::cargar(std::istream & is)
 {
-  // TODO clear de campo?
-  _enjambre.clear();
-  _estado.clear(); // TODO check
+  // TODO clear de campo? --esto no compila
+  //_enjambre.clear();
+  //_estado.clear(); // TODO check
   char b;
   is >> b >> b;
   _campo.cargar(is);
@@ -126,14 +127,14 @@ void Sistema::cargar(std::istream & is)
   // }
   string todosLosDrones;
   getline(is, todosLosDrones, ']');
-  vector<string> drones = split(todosLosDrones, ',');
+  /*vector<string> drones = split(todosLosDrones, ',');
   for(int i = 0; i < drones.size(); i++)
   {
     stringstream droneStream(drones[i]);
     Drone droneCargado;
     droneCargado.cargar(droneStream);
     _enjambre.push_back(droneCargado);
-  }
+  }*/
 
   Dimension dimensionCampo = _campo.dimensiones();
   for(int i=0; i<dimensionCampo.ancho; i++)
@@ -151,7 +152,7 @@ void Sistema::cargar(std::istream & is)
     {
       string parcela;
       getline(is, parcela, ',');
-      _grilla.parcelas[i][0] = tipoDeParcela(parcela);
+      //_grilla.parcelas[i][0] = tipoDeParcela(parcela); esto no compila
     }
     is >> b;
   }

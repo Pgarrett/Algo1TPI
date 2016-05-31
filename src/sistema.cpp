@@ -40,6 +40,16 @@ const Secuencia<Drone>& Sistema::enjambreDrones() const
 
 void Sistema::crecer()
 {
+  for(unsigned int i=0; i<_estado.parcelas.size(); i++)
+  {
+    for(unsigned int j=0; j<_estado.parcelas[0].size(); j++)
+    {
+      if(_estado.parcelas[i][j] == RecienSembrado)
+        _estado.parcelas[i][j] = EnCrecimiento;
+      else if(_estado.parcelas[i][j] == EnCrecimiento)
+        _estado.parcelas[i][j] = ListoParaCosechar;
+    }
+  }
 }
 
 void Sistema::seVinoLaMaleza(const Secuencia<Posicion>& ps)

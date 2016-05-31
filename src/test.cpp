@@ -118,5 +118,7 @@ inline void sistema_test()
   ds.push_back(d2);
 
   Sistema s(c, ds);
+  s.crecer();
+
   s.guardar(cout);
 }

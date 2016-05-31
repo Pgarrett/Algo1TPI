@@ -1,3 +1,4 @@
+#include<sstream>
 #include "sistema.h"
 #include "auxiliares.cpp"
 #include <stdlib.h>
@@ -122,13 +123,6 @@ void Sistema::cargar(std::istream & is)
   string todosLosDrones;
   getline(is, todosLosDrones, ']');
   vector<string> drones = splitSys(todosLosDrones, ',');
-  for(int i = 0; i < drones.size(); i++)
-  {
-    stringstream droneStream(drones[i]);
-    Drone droneCargado;
-    droneCargado.cargar(droneStream);
-    _enjambre.push_back(droneCargado);
-  }
   Dimension dimensionCampo = _campo.dimensiones();
   _estado = Grilla<EstadoCultivo>(dimensionCampo);
   for(int i=0; i<dimensionCampo.ancho; i++)
@@ -154,6 +148,8 @@ void Sistema::cargar(std::istream & is)
       p2.x = i;
       p2.y = j;
       _estado.parcelas[i][j] = getEstadoCultivo(p2, _campo.contenido(p2), estadoC);
+      string parcela;
+      getline(is, parcela, ',');
     }
     is >> b;
   }

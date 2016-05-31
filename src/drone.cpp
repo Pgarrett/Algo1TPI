@@ -1,5 +1,6 @@
 #include "drone.h"
 #include "auxiliares.cpp"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -120,6 +121,26 @@ void Drone::guardar(std::ostream & os) const
 // TODO [Phil]
 void Drone::cargar(std::istream & is)
 {
+  _trayectoria.clear();
+  _productos.clear();
+  char b;
+  is >> b >> b >> _id >> _bateria >> b;
+  while(b != ']')
+  {
+    Posicion p = Posicion();
+    is >> b >> p.x >> b >> p.y >> b;
+    _trayectoria.push_back(p);
+    is >> b;
+  }
+  is >> b;
+  string productos;
+  getline(is, productos, ']');
+  vector<string> prods = split(productos, ',');
+  for(int i = 0; i < prods.size(); i++)
+  {
+    string p = prods[i];
+    _productos.push_back(tipoDeProducto(p));
+  }
 }
 
 void Drone::moverA(const Posicion pos)

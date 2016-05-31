@@ -85,7 +85,7 @@ Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
     return res;
 
   Drone d = ds[0];
-  for(int j=0; j<d.vueloRealizado().size(); j++)
+  for(unsigned int j=0; j<d.vueloRealizado().size(); j++)
     agregarCruces(ds, j, d.vueloRealizado()[j], res);
 
   ordenar(res);
@@ -113,6 +113,13 @@ void Drone::cargar(std::istream & is)
 {
   char b;
   is >> b >> b >> this->_id >> this->_bateria >> b;
+  // TODO revisar [Philip, segmentation fault]
+  //_trayectoria.clear();
+  //_productos.clear();
+
+  //char b;
+  //is >> b >> b >> _id >> _bateria >> b;
+
   while(b != ']')
   {
     Posicion p;
@@ -121,14 +128,11 @@ void Drone::cargar(std::istream & is)
     is >> b;
   }
   is >> b;
-  string productos;
-  getline(is, productos, ']');
-  vector<string> prods = vector<string>();
-  prods = split(productos, ',');
-  for(int i = 0; i < prods.size(); i++)
-  {
-    this->_productos.push_back(tipoDeProducto(prods[i]));
-  }
+  string productosString;
+  getline(is, productosString, ']');
+  vector<string> productos = splitVector(productosString, ',');
+  for(unsigned int i = 0; i < productos.size(); i++)
+    this->_productos.push_back(tipoDeProducto(productos[i]));
   is >> b;
 }
 

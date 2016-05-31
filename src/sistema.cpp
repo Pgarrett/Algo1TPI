@@ -1,8 +1,8 @@
-#include<sstream>
-#include "sistema.h"
-#include "auxiliares.cpp"
 #include <stdlib.h>
 #include <sstream>
+
+#include "sistema.h"
+#include "auxiliares.cpp"
 
 using namespace std;
 
@@ -13,17 +13,14 @@ Sistema::Sistema()
 Sistema::Sistema(const Campo & c, const Secuencia<Drone>& ds)
 {
   _campo = c;
-  Dimension dimensionCampo = _campo.dimensiones();
-  _estado = Grilla<EstadoCultivo>(dimensionCampo);
-  for(int i=0; i<dimensionCampo.ancho; i++)
-  {
-    _estado.parcelas[i][0] = NoSensado;
-    for(int j=1; j<dimensionCampo.largo; j++)
-    {
-      _estado.parcelas[i][j] = NoSensado;
-    }
-  }
   _enjambre = ds;
+  _estado = Grilla<EstadoCultivo>(c.dimensiones());
+
+  // Sabemos que por invariante el campo tiene al menos una parcela, por lo tanto al menos alguna fila y columna
+  // por eso podemos pedir parcelas[0]
+  for(unsigned int i=0; i<_estado.parcelas.size(); i++)
+    for(unsigned int j=0; j<_estado.parcelas[0].size(); j++)
+      _estado.parcelas[i][j] = NoSensado;
 }
 
 const Campo & Sistema::campo() const
@@ -43,10 +40,22 @@ const Secuencia<Drone>& Sistema::enjambreDrones() const
 
 void Sistema::crecer()
 {
+  for(unsigned int i=0; i<_estado.parcelas.size(); i++)
+  {
+    for(unsigned int j=0; j<_estado.parcelas[0].size(); j++)
+    {
+      if(_estado.parcelas[i][j] == RecienSembrado)
+        _estado.parcelas[i][j] = EnCrecimiento;
+      else if(_estado.parcelas[i][j] == EnCrecimiento)
+        _estado.parcelas[i][j] = ListoParaCosechar;
+    }
+  }
 }
 
 void Sistema::seVinoLaMaleza(const Secuencia<Posicion>& ps)
 {
+  for(unsigned int i=0; i<ps.size(); i++)
+    _estado.parcelas[ps[i].x][ps[i].y] = ConMaleza;
 }
 
 void Sistema::seExpandePlaga()
@@ -78,39 +87,40 @@ void Sistema::mostrar(std::ostream & os) const
 {
   os << "{ S ";
   _campo.mostrar(os);
-  for(int i = 0; i < _enjambre.size(); i++)
+  for(unsigned int i = 0; i < _enjambre.size(); i++)
   {
     _enjambre[i].mostrar(os);
   }
   os << " }";
 }
 
-//{ S { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]} [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}, { D 15 46 [[0,1],[1,1][2,1][2,2]] [HerbicidaLargoAlcance, Fertilizante, Herbicida, Plaguicida]}] [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
+//{ S { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}
+// [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]},
+// { D 15 46 [[0,1],[1,1][2,1][2,2]] [HerbicidaLargoAlcance, Fertilizante, Herbicida, Plaguicida]}]
+// [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
 void Sistema::guardar(std::ostream & os) const
 {
   os << "{ S ";
   _campo.guardar(os);
+
   os << " [";
-  for(int i = 0; i < _enjambre.size(); i++)
+  for(unsigned int i = 0; i < _enjambre.size(); i++)
   {
     _enjambre[i].guardar(os);
-    if (i < _enjambre.size() - 1)
+    if (i < _enjambre.size()-1)
       os << ",";
   }
   os << "]";
+
   Dimension d = _campo.dimensiones();
   for(int i=0; i<d.ancho; i++)
   {
     os << "[";
-    Posicion p1 = Posicion();
-    p1.x = i;
-    p1.y = 0;
+    Posicion p1 = Posicion(i,0);
     os << estadoDelCultivo(p1);
     for(int j=1; j<d.largo; j++)
     {
-      Posicion p2 = Posicion();
-      p2.x = i;
-      p2.y = 0;
+      Posicion p2 = Posicion(i,j);
       os << "," << estadoDelCultivo(p2);
     }
     if(i<d.ancho-1)
@@ -147,32 +157,28 @@ void Sistema::cargar(std::istream & is)
     ultimoDrone = *d.rbegin();
   }
   is >> b;
+
   Dimension dimensionCampo = _campo.dimensiones();
   this->_estado = Grilla<EstadoCultivo>(dimensionCampo);
   for(int i=0; i<dimensionCampo.ancho; i++)
   {
     is >> b;
     string estadoC;
-    Posicion p1;
-    p1.x = i;
-    p1.y = 0;
-    getline(is, estadoC, ',');
-    _estado.parcelas[i][0] = getEstadoCultivo(p1, _campo.contenido(p1), estadoC);
-    for(int j=1; j<dimensionCampo.largo; j++)
+    for(int j=0; j<dimensionCampo.largo; j++)
     {
       if (j < dimensionCampo.largo - 1)
-      {
         getline(is, estadoC, ',');
-      }
       else
       {
         getline(is, estadoC, ']');
         is >> b;
       }
-      Posicion p2;
-      p2.x = i;
-      p2.y = j;
-      _estado.parcelas[i][j] = getEstadoCultivo(p2, _campo.contenido(p2), estadoC);
+      Posicion p(i,j);
+      // Dado que no esta especificado que estado tienen las parcelas que no son de cultivo, le ponemos NoSensado
+      if(_campo.contenido(p) != Cultivo)
+        _estado.parcelas[i][j] = NoSensado;
+      else
+        _estado.parcelas[i][j] = estadoCultivo(estadoC);
     }
   }
   is >> b;
@@ -180,10 +186,21 @@ void Sistema::cargar(std::istream & is)
 
 bool Sistema::operator==(const Sistema & otroSistema) const
 {
-	return false;
+  if(!(_campo == otroSistema.campo())
+     || !mismos(_enjambre, otroSistema.enjambreDrones()))
+      return false;
+
+  // Ya sabemos que |estadoDelCultivo| es igual para ambos sistemas, por igualdad de campo + invariante
+  for(unsigned int i=0; i<_estado.parcelas.size(); i++)
+    for(unsigned int j=0; j<_estado.parcelas[0].size(); j++)
+      if(_estado.parcelas[i][j] != otroSistema.estadoDelCultivo(Posicion(i,j)))
+        return false;
+
+  return true;
 }
 
 std::ostream & operator<<(std::ostream & os, const Sistema & s)
 {
+  s.mostrar(os);
 	return os;
 }

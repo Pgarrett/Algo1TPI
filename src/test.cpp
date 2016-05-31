@@ -4,6 +4,7 @@
 #include "tipos.h"
 #include "campo.h"
 #include "drone.h"
+#include "sistema.h"
 
 #include "auxiliares.cpp"
 
@@ -74,4 +75,48 @@ inline void drone_test()
   mostrarSecuencia(cout, Drone::vuelosCruzados(ds));
   //istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}");
   //d.cargar(iss);
+}
+
+inline void sistema_test()
+{
+  Posicion p(1,2);
+  Posicion g(3,1);
+
+  Campo c(p, g);
+  g.x = 4;
+  Campo c2(p, g);
+
+  istringstream iss("{ C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}");
+  c.cargar(iss);
+
+  vector<Producto> ps;
+  ps.push_back(Plaguicida);
+  ps.push_back(Herbicida);
+  ps.push_back(Herbicida);
+  ps.push_back(Herbicida);
+  Drone d(1, ps);
+  Drone d2(2, ps);
+
+  d.moverA(p);
+  p.y = 1;
+  d.moverA(p);
+  p.x = 1;
+  p.y = 2;
+  d.moverA(p);
+
+  p.x = 1;
+  p.y = 2;
+  d2.moverA(p);
+  p.y = 1;
+  d2.moverA(p);
+  p.x = 1;
+  p.y = 2;
+  d2.moverA(p);
+
+  Secuencia<Drone> ds;
+  ds.push_back(d);
+  ds.push_back(d2);
+
+  Sistema s(c, ds);
+  s.guardar(cout);
 }

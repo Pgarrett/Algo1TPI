@@ -80,7 +80,7 @@ Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
     return res;
 
   Drone d = ds[0];
-  for(int j=0; j<d.vueloRealizado().size(); j++)
+  for(unsigned int j=0; j<d.vueloRealizado().size(); j++)
     agregarCruces(ds, j, d.vueloRealizado()[j], res);
 
   ordenar(res);
@@ -104,13 +104,14 @@ void Drone::guardar(std::ostream & os) const
   os << "}";
 }
 
-// TODO [Phil]
 void Drone::cargar(std::istream & is)
 {
   _trayectoria.clear();
   _productos.clear();
+
   char b;
   is >> b >> b >> _id >> _bateria >> b;
+
   while(b != ']')
   {
     Posicion p = Posicion();
@@ -119,14 +120,12 @@ void Drone::cargar(std::istream & is)
     is >> b;
   }
   is >> b;
-  string productos;
-  getline(is, productos, ']');
-  vector<string> prods = split(productos, ',');
-  for(int i = 0; i < prods.size(); i++)
-  {
-    string p = prods[i];
-    _productos.push_back(tipoDeProducto(p));
-  }
+
+  string productosString;
+  getline(is, productosString, ']');
+  vector<string> productos = splitVector(productosString, ',');
+  for(unsigned int i = 0; i < productos.size(); i++)
+    _productos.push_back(tipoDeProducto(productos[i]));
 }
 
 void Drone::moverA(const Posicion pos)

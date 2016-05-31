@@ -17,13 +17,8 @@ inline std::ostream & operator<<(std::ostream & os, const InfoVueloCruzado & i)
 
 inline void campo_test()
 {
-  Posicion p;
-  p.x = 1;
-  p.y = 2;
-
-  Posicion g;
-  g.x = 3;
-  g.y = 1;
+  Posicion p(1,2);
+  Posicion g(3,1);
 
   Campo c(p, g);
   g.x = 4;
@@ -49,9 +44,7 @@ inline void drone_test()
   d2.sacarProducto(Plaguicida);
   cout << (d==d) << (d==d2);
 
-  Posicion p;
-  p.x = 1;
-  p.y = 2;
+  Posicion p(1,2);
   d.moverA(p);
   p.y = 1;
   d.moverA(p);

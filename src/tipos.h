@@ -23,6 +23,8 @@ struct Posicion
   int x;
   int y;
 
+  inline Posicion() { }
+  inline Posicion(int px, int py) { x = px; y = py; }
   inline bool operator==(Posicion p) const { return p.x == x && p.y == y; }
   inline bool operator!=(Posicion p) const { return p.x != x || p.y != y; }
 };

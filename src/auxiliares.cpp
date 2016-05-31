@@ -25,7 +25,7 @@ inline bool mismos(const Secuencia<T> & v1, const Secuencia<T> & v2)
   if(v1.size() != v2.size())
     return false;
 
-  for(int i=0; i<v1.size(); i++)
+  for(unsigned int i=0; i<v1.size(); i++)
   {
     if(cuenta(v1, v1[i]) != cuenta(v2, v1[i]))
       return false;
@@ -64,7 +64,7 @@ inline string trim(string& str)
   return str.substr(first, (last-first+1));
 }
 
-inline vector<string> split(string str, char delimiter)
+inline vector<string> splitVector(string str, char delimiter)
 {
   vector<string> result;
   stringstream ss(str);
@@ -74,25 +74,4 @@ inline vector<string> split(string str, char delimiter)
     result.push_back(trim(tok));
   }
   return result;
-}
-
-inline vector<string> splitSys(string str, char delimiter)
-{
-  vector<string> result;
-  stringstream ss(str);
-  string tok;
-  while(getline(ss, tok, delimiter))
-  {
-    result.push_back(trim(tok));
-  }
-  return result;
-}
-
-inline EstadoCultivo getEstadoCultivo(Posicion p, Parcela contenido, string estadoC)
-{
-  if(contenido == Cultivo)
-  {
-    return estadoCultivo(estadoC);
-  }
-  return NoSensado;
 }

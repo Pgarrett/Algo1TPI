@@ -96,10 +96,7 @@ bool Campo::operator==(const Campo &otroCampo) const
   {
     for(int j=0; j<_dimension.largo; j++)
     {
-      Posicion p;
-      p.x = i;
-      p.y = j;
-
+      Posicion p(i,j);
       if(contenido(p) != otroCampo.contenido(p))
         return false;
     }

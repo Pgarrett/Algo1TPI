@@ -54,6 +54,8 @@ void Sistema::crecer()
 
 void Sistema::seVinoLaMaleza(const Secuencia<Posicion>& ps)
 {
+  for(unsigned int i=0; i<ps.size(); i++)
+    _estado.parcelas[ps[i].x][ps[i].y] = ConMaleza;
 }
 
 void Sistema::seExpandePlaga()
@@ -105,7 +107,7 @@ void Sistema::guardar(std::ostream & os) const
   for(unsigned int i = 0; i < _enjambre.size(); i++)
   {
     _enjambre[i].guardar(os);
-    if (i < _enjambre.size() - 1)
+    if (i < _enjambre.size()-1)
       os << ",";
   }
   os << "]";
@@ -118,7 +120,7 @@ void Sistema::guardar(std::ostream & os) const
     os << estadoDelCultivo(p1);
     for(int j=1; j<d.largo; j++)
     {
-      Posicion p2 = Posicion(i, 0);
+      Posicion p2 = Posicion(i,j);
       os << "," << estadoDelCultivo(p2);
     }
     if(i<d.ancho-1)

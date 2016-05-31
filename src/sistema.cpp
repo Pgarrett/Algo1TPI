@@ -12,7 +12,15 @@ Sistema::Sistema()
 
 Sistema::Sistema(const Campo & c, const Secuencia<Drone>& ds)
 {
+  _campo = c;
+  _enjambre = ds;
+  _estado = Grilla<EstadoCultivo>(c.dimensiones());
 
+  // Sabemos que por invariante el campo tiene al menos una parcela, por lo tanto al menos alguna fila y columna
+  // por eso podemos pedir parcelas[0]
+  for(unsigned int i=0; i<_estado.parcelas.size(); i++)
+    for(unsigned int j=0; j<_estado.parcelas[0].size(); j++)
+      _estado.parcelas[i][j] = NoSensado;
 }
 
 const Campo & Sistema::campo() const
@@ -162,10 +170,21 @@ void Sistema::cargar(std::istream & is)
 
 bool Sistema::operator==(const Sistema & otroSistema) const
 {
-	return false;
+  if(!(_campo == otroSistema.campo())
+     || !mismos(_enjambre, otroSistema.enjambreDrones()))
+      return false;
+
+  // Ya sabemos que |estadoDelCultivo| es igual para ambos sistemas, por igualdad de campo + invariante
+  for(unsigned int i=0; i<_estado.parcelas.size(); i++)
+    for(unsigned int j=0; j<_estado.parcelas[0].size(); j++)
+      if(_estado.parcelas[i][j] != otroSistema.estadoDelCultivo(Posicion(i,j)))
+        return false;
+
+  return true;
 }
 
 std::ostream & operator<<(std::ostream & os, const Sistema & s)
 {
+  s.mostrar(os);
 	return os;
 }

@@ -23,10 +23,6 @@ class Sistema
     void aterrizarYCargarBaterias(Carga b);
     void fertilizarPorFilas();
     void volarYSensar(const Drone& d);
-    Posicion damePosicionGranero(Dimension dimensionCampo);
-    vector<Posicion> dameCultivosVecinos(Dimension dimensionCampo, Posicion p);
-    vector<Posicion> dameParcelasVecinasConDrone(vector<Posicion> cultivosAlLadoDelGranero, ID droneId);
-    bool noHayDroneAca(Posicion p, vector<Posicion> parcelasVecinasConDrone);
 
     void mostrar(std::ostream& os) const;
     void guardar(std::ostream& os) const;
@@ -38,6 +34,13 @@ class Sistema
     Campo _campo;
     Secuencia<Drone> _enjambre;
     Grilla<EstadoCultivo> _estado;
+
+    Secuencia<Posicion> todasLasParcelas() const;
+    Posicion posicionGranero();
+    Secuencia<Posicion> parcelasVecinas(Posicion p);
+    Secuencia<Posicion> parcelasVecinasConPlaga(Posicion p);
+    Secuencia<Posicion> parcelasVecinasLibres(Posicion p);
+    Drone dronePorId(ID id);
 
     //Para correr los tests (NO TOCAR)
     friend class test_sistema_lo_basico_crecer_funciona_ok_Test;

@@ -8,6 +8,13 @@ Campo::Campo()
 {
 }
 
+Campo::Campo(const Posicion &posG, const Posicion &posC, Dimension dimension) {
+    _dimension = dimension;
+    _grilla = Grilla<Parcela>(_dimension);
+    _grilla.parcelas[posG.x][posG.y] = Granero;
+    _grilla.parcelas[posC.x][posC.y] = Casa;
+}
+
 Campo::Campo(const Posicion &posG, const Posicion &posC)
 {
   _dimension.ancho = max(posG.x, posC.x)+1;
@@ -70,25 +77,16 @@ void Campo::guardar(std::ostream &os) const
 
 void Campo::cargar(std::istream &is)
 {
-  char b;
+  char b; // Para guardar basura / caracteres que no nos interesan.
   is >> b >> b >> b >> _dimension.ancho >> b >> _dimension.largo >> b >> b;
 
   for(int i=0; i<_dimension.ancho; i++)
   {
     is >> b;
-    string parcela;
-    getline(is, parcela, ',');
-    _grilla.parcelas[i][0] = tipoDeParcela(parcela);
     for(int j=1; j<_dimension.largo; j++)
     {
-       if (j < _dimension.largo - 1)
-      {
-        getline(is, parcela, ',');
-      }
-      else
-      {
-        getline(is, parcela, ']');
-      }
+      string parcela;
+      getline(is, parcela, ',');
       _grilla.parcelas[i][j] = tipoDeParcela(parcela);
     }
     is >> b;

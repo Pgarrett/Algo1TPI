@@ -86,7 +86,21 @@ void Sistema::despegar(const Drone & d)
 
 bool Sistema::listoParaCosechar() const
 {
-	return false;
+  Dimension dimensionCampo = _campo.dimensiones();
+  int cultivosCosechables = 0;
+  int parcelasConCultivo = 0;
+  for(int i = 0; i < dimensionCampo.ancho; i++)
+  {
+    for(int j = 0; j < dimensionCampo.largo; j++)
+    {
+      Posicion aux(i,j);
+      if(_campo.contenido(aux) == Cultivo)
+        parcelasConCultivo++;
+      if(_estado.parcelas[i][j] == ListoParaCosechar)
+        cultivosCosechables++;
+    }
+  }
+  return (cultivosCosechables/parcelasConCultivo) >= 0,9;
 }
 
 void Sistema::aterrizarYCargarBaterias(Carga b)

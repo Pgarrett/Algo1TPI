@@ -61,9 +61,9 @@ void Sistema::seVinoLaMaleza(const Secuencia<Posicion>& ps)
 void Sistema::seExpandePlaga()
 {
   Dimension dimensionCampo = _campo.dimensiones();
-  for(unsigned int i = 0; i < dimensionCampo.ancho; i++)
+  for(int i = 0; i < dimensionCampo.ancho; i++)
   {
-    for(unsigned int j = 0; j < dimensionCampo.largo; j++)
+    for(int j = 0; j < dimensionCampo.largo; j++)
     {
       vector<Posicion> vecinasConPlaga = parcelasVecinasConPlaga(Posicion(i, j));
       if(vecinasConPlaga.size() > 0)
@@ -87,7 +87,7 @@ bool Sistema::listoParaCosechar() const
   int parcelasConCultivo = parcelas.size()-2; // // Menos la casa y el granero.
   int cultivosCosechables = 0;
 
-  int i = 0;
+  unsigned int i = 0;
   while(i < parcelas.size())
   {
     if(_estado.parcelas[parcelas[i].x][parcelas[i].y] == ListoParaCosechar)
@@ -95,7 +95,7 @@ bool Sistema::listoParaCosechar() const
     i++;
   }
 
-  return (cultivosCosechables/parcelasConCultivo) >= 0,9;
+  return (cultivosCosechables/parcelasConCultivo) >= 0.9;
 }
 
 void Sistema::aterrizarYCargarBaterias(Carga b)

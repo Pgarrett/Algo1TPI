@@ -114,6 +114,14 @@ void Sistema::aterrizarYCargarBaterias(Carga b)
 
 void Sistema::fertilizarPorFilas()
 {
+  for(int i=0; i<_enjambre.size(); i++)
+  {
+    Drone d = _enjambre[i];
+    if(d.enVuelo())
+    {
+      fertilizarFila(d);
+    }
+  }
 }
 
 void Sistema::volarYSensar(const Drone & d)
@@ -300,6 +308,41 @@ Drone Sistema::dronePorId(ID id)
   for(unsigned int i=0; i<_enjambre.size(); i++)
     if(_enjambre[i].id() == id)
       return _enjambre[i];
+}
+
+void Sistema::fertilizarFila(Drone d)
+{
+  if(tieneFertilizante(d) && _campo.contenido(d.posicionActual()) == Cultivo)
+    fertilizarPosicionActual(d);
+
+  while(d.posicionActual().x > 0 && tieneFertilizante(d) && d.bateria() > 0
+        && _campo.contenido(d.posicionActual()) == Cultivo)
+  {
+    d.moverA(d.posicionActual()-Posicion(1,0));
+    d.setBateria(d.bateria()-1);
+
+    if(_campo.contenido(d.posicionActual()) == Cultivo)
+      fertilizarPosicionActual(d);
+  }
+}
+
+// Lo definimos aca porque la consigna dice que no podemos modificar la parte publica de las clases.
+// En realidad iria en Drone.
+bool Sistema::tieneFertilizante(Drone d)
+{
+  Secuencia<Producto> productos = d.productosDisponibles();
+  for(int i=0; i<productos.size(); i++)
+    if(productos[i] == Fertilizante)
+      return true;
+  return false;
+}
+
+void Sistema::fertilizarPosicionActual(Drone d)
+{
+  Secuencia<Producto> productos = d.productosDisponibles();
+  for(int i=0; i<productos.size(); i++)
+    if(productos[i] == Fertilizante)
+      d.sacarProducto(Fertilizante);
 }
 
 bool Sistema::operator==(const Sistema & otroSistema) const

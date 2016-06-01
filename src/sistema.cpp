@@ -64,6 +64,24 @@ void Sistema::seExpandePlaga()
 
 void Sistema::despegar(const Drone & d)
 {
+  Dimension dimensionCampo = _campo.dimensiones();
+  Posicion posicionGranero = damePosicionGranero(dimensionCampo);
+  vector<Posicion> cultivosAlLadoDelGranero = dameCultivosVecinosAlGranero(dimensionCampo, posicionGranero);
+  vector<Posicion> parcelasVecinasConDrone = dameParcelasVecinasConDrone(cultivosAlLadoDelGranero, d.id());
+  vector<Posicion> posicionesValidasParaDrone;
+  for(int i = 0; i < cultivosAlLadoDelGranero.size(); i++)
+  {
+    if(noHayDroneAca(cultivosAlLadoDelGranero[i], parcelasVecinasConDrone))
+      posicionesValidasParaDrone.push_back(cultivosAlLadoDelGranero[i]);
+  }
+  if(posicionesValidasParaDrone.size() > 0)
+  {
+    for(int i = 0; i < _enjambre.size(); i++)
+    {
+      if(_enjambre[i].id() == d.id())
+        _enjambre[i].moverA(posicionesValidasParaDrone[0]);
+    }
+  }
 }
 
 bool Sistema::listoParaCosechar() const
@@ -179,6 +197,62 @@ void Sistema::cargar(std::istream & is)
     is >> b;
   }
 }
+
+Posicion Sistema::damePosicionGranero(Dimension dimensionCampo)
+{
+  for(int i = 0; i < dimensionCampo.ancho; i++)
+  {
+    for(int j = 0; j < dimensionCampo.largo; j++)
+    {
+      Posicion aux(i,j);
+      if(this->_campo.contenido(aux) == Granero)
+        return aux;
+    }
+  }
+}
+
+vector<Posicion> Sistema::dameCultivosVecinosAlGranero(Dimension dimensionCampo, Posicion posicionGranero)
+{
+  vector<Posicion> result;
+  for(int i = 0; i < dimensionCampo.ancho; i++)
+  {
+    for(int j = 0; j < dimensionCampo.largo; j++)
+    {
+      if((i == posicionGranero.x - 1 || i == posicionGranero.x + 1) && j == posicionGranero.y)
+      {
+        Posicion aux(i, j);
+        if(_campo.contenido(aux) == Cultivo)
+          result.push_back(aux);
+      }
+    }
+  }
+  return result;
+}
+
+vector<Posicion> Sistema::dameParcelasVecinasConDrone(vector<Posicion> cultivosAlLadoDelGranero, ID droneId)
+{
+  vector<Posicion> result;
+  for(int i = 0; i < cultivosAlLadoDelGranero.size(); i++)
+  {
+    for(int j = 0; j < _enjambre.size(); j++)
+    {
+      if(_enjambre[j].id() != droneId && _enjambre[j].enVuelo() && _enjambre[j].posicionActual() == cultivosAlLadoDelGranero[i])
+          result.push_back(cultivosAlLadoDelGranero[i]);
+    }
+  }
+  return result;
+}
+
+bool Sistema::noHayDroneAca(Posicion p, vector<Posicion> parcelasVecinasConDrone)
+{
+  bool result = true;
+  for(int j = 0; j <parcelasVecinasConDrone.size(); j++)
+  {
+    result &= (p.x != parcelasVecinasConDrone[j].x && p.y != parcelasVecinasConDrone[j].y);
+  }
+  return result;
+}
+
 
 bool Sistema::operator==(const Sistema & otroSistema) const
 {

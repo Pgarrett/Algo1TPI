@@ -23,6 +23,10 @@ class Sistema
     void aterrizarYCargarBaterias(Carga b);
     void fertilizarPorFilas();
     void volarYSensar(const Drone& d);
+    Posicion damePosicionGranero(Dimension dimensionCampo);
+    vector<Posicion> dameCultivosVecinosAlGranero(Dimension dimensionCampo, Posicion posicionGranero);
+    vector<Posicion> dameParcelasVecinasConDrone(vector<Posicion> cultivosAlLadoDelGranero, ID droneId);
+    bool noHayDroneAca(Posicion p, vector<Posicion> parcelasVecinasConDrone);
 
     void mostrar(std::ostream& os) const;
     void guardar(std::ostream& os) const;

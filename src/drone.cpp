@@ -130,6 +130,7 @@ void Drone::cargar(std::istream & is)
 
 void Drone::moverA(const Posicion pos)
 {
+  _enVuelo = true;
   _trayectoria.push_back(pos);
 }
 

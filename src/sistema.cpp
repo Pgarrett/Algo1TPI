@@ -105,6 +105,16 @@ bool Sistema::listoParaCosechar() const
 
 void Sistema::aterrizarYCargarBaterias(Carga b)
 {
+  for(unsigned int i = 0; i < _enjambre.size(); i++)
+  {
+    if(_enjambre[i].bateria() < b)
+    {
+      Secuencia ps = _enjambre[i].productosDisponibles();
+      ID id = _enjambre[i].id();
+      _enjambre.erase(_enjambre.begin() + i);
+      _enjambre.push_back(Drone(id, ps));
+    }
+  }
 }
 
 void Sistema::fertilizarPorFilas()

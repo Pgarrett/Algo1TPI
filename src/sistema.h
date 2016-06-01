@@ -24,7 +24,7 @@ class Sistema
     void fertilizarPorFilas();
     void volarYSensar(const Drone& d);
     Posicion damePosicionGranero(Dimension dimensionCampo);
-    vector<Posicion> dameCultivosVecinosAlGranero(Dimension dimensionCampo, Posicion posicionGranero);
+    vector<Posicion> dameCultivosVecinos(Dimension dimensionCampo, Posicion p);
     vector<Posicion> dameParcelasVecinasConDrone(vector<Posicion> cultivosAlLadoDelGranero, ID droneId);
     bool noHayDroneAca(Posicion p, vector<Posicion> parcelasVecinasConDrone);
 

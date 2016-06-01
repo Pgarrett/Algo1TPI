@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Posicion operator-(Posicion p1, const Posicion & p2)
+const Posicion operator-(Posicion p1, const Posicion & p2)
 {
   p1.x -= p2.x;
   p1.y -= p2.y;
@@ -45,6 +45,18 @@ std::ostream & operator<<(std::ostream &os, const EstadoCultivo &e)
   if(e == ConPlaga) os << "ConPlaga";
   if(e == NoSensado) os << "NoSensado";
 	return os;
+}
+
+const bool operator==(const Posicion &p1, const Posicion &p2) {
+    return p1.x == p2.x && p1.y == p2.y;
+}
+
+const bool operator==(const InfoVueloCruzado &a, const InfoVueloCruzado &b) {
+    return a.posicion == b.posicion && a.cantidadCruces == b.cantidadCruces;
+}
+
+const bool operator<(InfoVueloCruzado i1, InfoVueloCruzado i2) {
+  return i1.cantidadCruces < i2.cantidadCruces;
 }
 
 Parcela tipoDeParcela(string s)

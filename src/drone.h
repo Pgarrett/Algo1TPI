@@ -2,7 +2,6 @@
 #define DRONE_H_INCLUDED
 
 #include <vector>
-
 #include "tipos.h"
 
 class Drone
@@ -40,11 +39,11 @@ class Drone
     Secuencia<Producto> _productos;
     bool _enVuelo;
     Posicion _posicionActual;
+
+    static void agregarCruce(Posicion p, int cantidad, Secuencia<InfoVueloCruzado> & vs);
+    static void agregarCruces(Secuencia<Drone> ds, int instante, Posicion p, Secuencia<InfoVueloCruzado> & vs);
 };
 
 std::ostream & operator<<(std::ostream & os,const Drone & d);
-
-void agregarCruce(Posicion p, int cantidad, Secuencia<InfoVueloCruzado> & vs);
-void agregarCruces(Secuencia<Drone> ds, int instante, Posicion p, Secuencia<InfoVueloCruzado> & vs);
 
 #endif // DRONE_H_INCLUDED

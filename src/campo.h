@@ -1,10 +1,7 @@
 #ifndef CAMPO_H_INCLUDED
 #define CAMPO_H_INCLUDED
 
-#include<string.h>
-
 #include "tipos.h"
-#include "auxiliares.h"
 
 using namespace std;
 
@@ -12,6 +9,7 @@ class Campo
 {
   public:
     Campo();
+    Campo(const Posicion &posG, const Posicion &posC, Dimension dimension);
     Campo(const Posicion &posG, const Posicion &posC);
 
     Dimension dimensiones() const;

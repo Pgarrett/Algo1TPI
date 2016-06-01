@@ -15,8 +15,16 @@ typedef int Largo;
 #define Secuencia std::vector
 
 enum Parcela {Cultivo, Granero, Casa};
+std::ostream &operator<<(std::ostream &os, const Parcela &p);
+Parcela tipoDeParcela(string s);
+
 enum Producto {Fertilizante, Plaguicida, PlaguicidaBajoConsumo, Herbicida, HerbicidaLargoAlcance};
+std::ostream &operator<<(std::ostream &os, const Producto &p);
+Producto tipoDeProducto(string s);
+
 enum EstadoCultivo {RecienSembrado, EnCrecimiento, ListoParaCosechar, ConMaleza, ConPlaga, NoSensado};
+std::ostream &operator<<(std::ostream &os, const EstadoCultivo &e);
+EstadoCultivo estadoCultivo(string s);
 
 struct Posicion
 {
@@ -25,10 +33,10 @@ struct Posicion
 
   inline Posicion() { }
   inline Posicion(int px, int py) { x = px; y = py; }
-  inline bool operator==(Posicion p) const { return p.x == x && p.y == y; }
-  inline bool operator!=(Posicion p) const { return p.x != x || p.y != y; }
 };
-Posicion operator-(Posicion p1, const Posicion & p2);
+const Posicion operator-(Posicion p1, const Posicion & p2);
+const bool operator==(const Posicion &p1, const Posicion &p2);
+std::ostream & operator<<(std::ostream & os, const Posicion & p);
 
 struct Dimension
 {
@@ -51,17 +59,8 @@ struct InfoVueloCruzado
 {
   Posicion posicion;
   int cantidadCruces;
-
-  inline bool operator<(InfoVueloCruzado i) const { return cantidadCruces < i.cantidadCruces; }
 };
-
-std::ostream & operator<<(std::ostream & os, const Posicion & p);
-std::ostream & operator<<(std::ostream & os, const Parcela & p);
-std::ostream & operator<<(std::ostream & os, const Producto & p);
-std::ostream & operator<<(std::ostream & os, const EstadoCultivo & e);
-
-Parcela tipoDeParcela(string s);
-Producto tipoDeProducto(string s);
-EstadoCultivo estadoCultivo(string s);
+const bool operator==(const InfoVueloCruzado &a, const InfoVueloCruzado &b);
+const bool operator<(InfoVueloCruzado i1, InfoVueloCruzado i2);
 
 #endif /*TIPOS_H*/

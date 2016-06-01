@@ -137,29 +137,19 @@ void Sistema::guardar(std::ostream & os) const
 //  [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
 void Sistema::cargar(std::istream & is)
 {
+  _campo = Campo();
+  _enjambre.clear();
+
   char b;
   is >> b >> b;
-  this->_campo.cargar(is);
-  is >> b;
-  string ingresaDrones;
-  getline(is, ingresaDrones, '[');
-  char ultimoDrone = *ingresaDrones.rbegin();
-  while(ultimoDrone != ']' && b != ']')
-  {
-    string d;
-    getline(is, d, '}');
-    d = d + '}';
-    stringstream dStream(d);
-    Drone droneCargado;
-    droneCargado.cargar(dStream);
-    this->_enjambre.push_back(droneCargado);
-    is >> b;
-    ultimoDrone = *d.rbegin();
-  }
-  is >> b;
+  _campo.cargar(is);
+
+  string todosLosDrones;
+  getline(is, todosLosDrones, ']');
+  vector<string> drones = splitVector(todosLosDrones, ',');
 
   Dimension dimensionCampo = _campo.dimensiones();
-  this->_estado = Grilla<EstadoCultivo>(dimensionCampo);
+  _estado = Grilla<EstadoCultivo>(dimensionCampo);
   for(int i=0; i<dimensionCampo.ancho; i++)
   {
     is >> b;
@@ -167,21 +157,27 @@ void Sistema::cargar(std::istream & is)
     for(int j=0; j<dimensionCampo.largo; j++)
     {
       if (j < dimensionCampo.largo - 1)
+      {
         getline(is, estadoC, ',');
+      }
       else
       {
         getline(is, estadoC, ']');
         is >> b;
       }
+
       Posicion p(i,j);
       // Dado que no esta especificado que estado tienen las parcelas que no son de cultivo, le ponemos NoSensado
       if(_campo.contenido(p) != Cultivo)
         _estado.parcelas[i][j] = NoSensado;
       else
-        _estado.parcelas[i][j] = estadoCultivo(estadoC);
+        _estado.parcelas[i][j] = estadoDelCultivo(p);
+
+      string parcela;
+      getline(is, parcela, ',');
     }
+    is >> b;
   }
-  is >> b;
 }
 
 bool Sistema::operator==(const Sistema & otroSistema) const

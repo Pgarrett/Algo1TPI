@@ -31,54 +31,6 @@ inline void campo_test()
   c.guardar(cout);
 }
 
-inline Campo dameCampo()
-{
-  Posicion p;
-  p.x = 1;
-  p.y = 2;
-
-  Posicion g;
-  g.x = 3;
-  g.y = 1;
-
-  Campo c(p, g);
-  return c;
-}
-
-inline Secuencia<Drone> dameDrones()
-{
-  vector<Producto> ps;
-  ps.push_back(Plaguicida);
-  ps.push_back(Herbicida);
-  Drone d(1, ps);
-  d.guardar(cout);
-  Drone d2 = d;
-  d.sacarProducto(Plaguicida);
-  Posicion p;
-  p.x = 1;
-  p.y = 2;
-  d.moverA(p);
-  p.y = 1;
-  d.moverA(p);
-  p.x = 1;
-  p.y = 2;
-  d.moverA(p);
-
-  p.x = 1;
-  p.y = 2;
-  d2.moverA(p);
-  p.y = 1;
-  d2.moverA(p);
-  p.x = 1;
-  p.y = 2;
-  d2.moverA(p);
-
-  Secuencia<Drone> ds;
-  ds.push_back(d);
-  ds.push_back(d2);
-  return ds;
-}
-
 inline void drone_test()
 {
   vector<Producto> ps;
@@ -121,8 +73,8 @@ inline void drone_test()
   d2.guardar(cout);
   cout << endl;
   mostrarSecuencia(cout, Drone::vuelosCruzados(ds));
-  istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}");
-  d.cargar(iss);
+  //istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}");
+  //d.cargar(iss);
 }
 
 inline void sistema_test()
@@ -169,15 +121,4 @@ inline void sistema_test()
   s.seVinoLaMaleza(d2.vueloRealizado());
 
   s.guardar(cout);
-
-  Sistema s1 = Sistema(dameCampo(), dameDrones());
-  cout << endl << endl;
-  s.guardar(cout);
-  cout << endl << endl;
-  istringstream iss2("{ S { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]} [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}, { D 15 46 [[0,1],[1,1],[2,1],[2,2]] [HerbicidaLargoAlcance, Fertilizante, Herbicida, Plaguicida]}] [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }");
-  s1.cargar(iss2);
-  cout << endl << endl;
-  s1.guardar(cout);
-  cout << endl;
-  cout << endl;
 }

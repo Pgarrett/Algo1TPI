@@ -35,15 +35,16 @@ class Sistema
     Secuencia<Drone> _enjambre;
     Grilla<EstadoCultivo> _estado;
 
-    // Auxiliares
-    bool enRango(int x, int y) const;
-    bool enRango(const Posicion p) const;
-    bool enRangoConPlaga(int x, int y) const;
-    Posicion posicionGranero() const;
-    bool enRangoCultivable(int x, int y) const;
-    bool enRangoCultivableLibre(int x, int y) const;
-    bool parcelaLibre(int x, int y) const;
-    static Posicion vecinoAlOeste(const Posicion &p);
+    //Para correr los tests (NO TOCAR)
+    friend class test_sistema_lo_basico_crecer_funciona_ok_Test;
+    friend class test_sistema_se_vino_la_maleza_lista_vacia_no_modifica_nada_Test;
+    friend class test_sistema_se_vino_la_maleza_se_pone_con_maleza_las_posiciones_de_la_lista_Test;
+    friend class test_sistema_se_expande_plaga_si_no_hay_plaga_no_cambia_Test;
+    friend class test_sistema_se_expande_plaga_si_hay_plaga_se_expande_Test;
+    friend class test_sistema_listo_para_cosechar_si_es_menos_del_90_por_ciento_retorna_false_Test;
+    friend class test_sistema_listo_para_cosechar_si_es_exactamente_el_90_por_ciento_retorna_true_Test;
+    friend class test_sistema_listo_para_cosechar_si_es_mas_del_90_por_ciento_retorna_true_Test;
+    friend class test_sistema_volar_y_sensar_todo_libre_Test;
 };
 
 // Definirlo usando mostrar, para poder usar << con este tipo.

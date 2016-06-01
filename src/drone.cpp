@@ -1,16 +1,11 @@
+#include <stdlib.h>
 #include "drone.h"
 #include "auxiliares.cpp"
-#include <stdlib.h>
 
 using namespace std;
 
 Drone::Drone()
 {
-  _id = 1;
-  _bateria = 100;
-  _trayectoria = Secuencia<Posicion>();
-  _productos = Secuencia<Producto>();
-  _enVuelo = false;
 }
 
 Drone::Drone(ID i, const std::vector<Producto>& ps)
@@ -70,7 +65,7 @@ bool Drone::vueloEscalerado() const
 
   while(i<_trayectoria.size()-1)
   {
-    if(_trayectoria[i+1]-_trayectoria[i] != delta[i%2])
+    if(!(_trayectoria[i+1]-_trayectoria[i] == delta[i%2]))
        esEscalera = false;
     i++;
   }
@@ -111,29 +106,26 @@ void Drone::guardar(std::ostream & os) const
 
 void Drone::cargar(std::istream & is)
 {
-  char b;
-  is >> b >> b >> this->_id >> this->_bateria >> b;
-  // TODO revisar [Philip, segmentation fault]
-  //_trayectoria.clear();
-  //_productos.clear();
+  _trayectoria.clear();
+  _productos.clear();
 
-  //char b;
-  //is >> b >> b >> _id >> _bateria >> b;
+  char b;
+  is >> b >> b >> _id >> _bateria >> b;
 
   while(b != ']')
   {
-    Posicion p;
+    Posicion p = Posicion();
     is >> b >> p.x >> b >> p.y >> b;
-    this->_trayectoria.push_back(p);
+    _trayectoria.push_back(p);
     is >> b;
   }
   is >> b;
+
   string productosString;
   getline(is, productosString, ']');
   vector<string> productos = splitVector(productosString, ',');
   for(unsigned int i = 0; i < productos.size(); i++)
-    this->_productos.push_back(tipoDeProducto(productos[i]));
-  is >> b;
+    _productos.push_back(tipoDeProducto(productos[i]));
 }
 
 void Drone::moverA(const Posicion pos)
@@ -187,7 +179,7 @@ std::ostream & operator<<(std::ostream & os, const Drone & d)
   return os;
 }
 
-void agregarCruce(Posicion p, int cantidad, Secuencia<InfoVueloCruzado> & vs)
+void Drone::agregarCruce(Posicion p, int cantidad, Secuencia<InfoVueloCruzado> & vs)
 {
   for(unsigned int i=0; i<vs.size(); i++)
   {
@@ -204,7 +196,7 @@ void agregarCruce(Posicion p, int cantidad, Secuencia<InfoVueloCruzado> & vs)
   vs.push_back(nuevoCruce);
 }
 
-void agregarCruces(Secuencia<Drone> ds, int instante, Posicion p, Secuencia<InfoVueloCruzado> & vs)
+void Drone::agregarCruces(Secuencia<Drone> ds, int instante, Posicion p, Secuencia<InfoVueloCruzado> & vs)
 {
   int cruces = 0;
   for(unsigned int i=0; i<ds.size(); i++)

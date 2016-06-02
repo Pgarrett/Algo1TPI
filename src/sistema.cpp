@@ -82,15 +82,15 @@ void Sistema::despegar(const Drone & d)
 bool Sistema::listoParaCosechar() const
 {
   Dimension dimensionCampo = _campo.dimensiones();
-  Secuencia<Posicion> parcelas = todasLasParcelas();
+  Secuencia<Posicion> parcelas = todasLasParcelasConCultivo();
 
-  int parcelasConCultivo = parcelas.size()-2; // // Menos la casa y el granero.
+  int parcelasConCultivo = parcelas.size();
   int cultivosCosechables = 0;
 
   unsigned int i = 0;
   while(i < parcelas.size())
   {
-    if(_estado.parcelas[parcelas[i].x][parcelas[i].y] == ListoParaCosechar)
+    if(estadoDelCultivo(parcelas[i]) == ListoParaCosechar)
       cultivosCosechables++;
     i++;
   }
@@ -233,6 +233,24 @@ Secuencia<Posicion> Sistema::todasLasParcelas() const
   for(int i = 0; i < dimensionCampo.ancho; i++)
     for(int j = 0; j < dimensionCampo.largo; j++)
       parcelas.push_back(Posicion(i,j));
+
+  return parcelas;
+}
+
+Secuencia<Posicion> Sistema::todasLasParcelasConCultivo() const
+{
+  Dimension dimensionCampo = _campo.dimensiones();
+  Secuencia<Posicion> parcelas;
+
+  for(int i = 0; i < dimensionCampo.ancho; i++)
+  {
+    for(int j = 0; j < dimensionCampo.largo; j++)
+    {
+      Posicion p = Posicion(i,j);
+      if(_campo.contenido(p) == Cultivo)
+        parcelas.push_back(p);
+    }
+  }
 
   return parcelas;
 }

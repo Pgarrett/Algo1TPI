@@ -36,6 +36,7 @@ class Sistema
     Grilla<EstadoCultivo> _estado;
 
     Secuencia<Posicion> todasLasParcelas() const;
+    Secuencia<Posicion> todasLasParcelasConCultivo() const;
     Posicion posicionGranero();
     Secuencia<Posicion> parcelasVecinas(Posicion p);
     Secuencia<Posicion> parcelasVecinasConPlaga(Posicion p);

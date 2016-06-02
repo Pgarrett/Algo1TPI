@@ -45,6 +45,9 @@ class Sistema
     void fertilizarPosicionActual(Drone d);
     void fertilizarFila(Drone d);
     bool tieneFertilizante(Drone d);
+    vector<Producto> productosUsables(Drone d, EstadoCultivo e);
+    int cuantoConsumeP(Producto p);
+    bool sePuedeAplicarP(Producto p, EstadoCultivo e, Drone d);
 
     //Para correr los tests (NO TOCAR)
     friend class test_sistema_lo_basico_crecer_funciona_ok_Test;

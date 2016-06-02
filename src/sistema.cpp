@@ -126,6 +126,43 @@ void Sistema::fertilizarPorFilas()
 
 void Sistema::volarYSensar(const Drone & d)
 {
+  Drone d1 = dronePorId(d.id());
+  // Por requiere sabemos que hay alguna parcela libre.
+  Posicion nuevaPosicion = parcelasVecinasLibres(d.posicionActual())[0];
+  d1.moverA(nuevaPosicion);
+  if(_campo.contenido(nuevaPosicion) != Cultivo || estadoDelCultivo(nuevaPosicion) == NoSensado)
+  {
+    if(_campo.contenido(nuevaPosicion) == Cultivo)
+      _estado.parcelas[nuevaPosicion.x][nuevaPosicion.y] = ListoParaCosechar;
+    d1.setBateria(d.bateria() - 1);
+  }
+  else
+  {
+    vector<Producto> prodUsables = productosUsables(d1, estadoDelCultivo(nuevaPosicion));
+    if(prodUsables.size() == 0)
+      d1.setBateria(d.bateria() - 1);
+    else
+    {
+      Producto productoAUsar = prodUsables[0];
+      d1.setBateria(d.bateria() - cuantoConsumeP(productoAUsar));
+      d1.sacarProducto(productoAUsar);
+      for(unsigned int i = 0; i < todasLasParcelasConCultivo().size(); i++)
+      {
+        vector<Posicion> parcelasAdyacentes = parcelasVecinas(nuevaPosicion);
+        parcelasAdyacentes.push_back(nuevaPosicion);
+        for(unsigned int j = 0; j < parcelasAdyacentes.size() + 1; j++)
+        {
+          if(todasLasParcelasConCultivo()[i] == parcelasAdyacentes[j] && sePuedeAplicarP(productoAUsar, estadoDelCultivo(nuevaPosicion), d1))
+          {
+            if(productoAUsar == Fertilizante)
+              _estado.parcelas[nuevaPosicion.x][nuevaPosicion.y] = ListoParaCosechar;
+            else
+              _estado.parcelas[nuevaPosicion.x][nuevaPosicion.y] = RecienSembrado;
+          }
+        }
+      }
+    }
+  }
 }
 
 void Sistema::mostrar(std::ostream & os) const
@@ -361,6 +398,53 @@ void Sistema::fertilizarPosicionActual(Drone d)
   for(int i=0; i<productos.size(); i++)
     if(productos[i] == Fertilizante)
       d.sacarProducto(Fertilizante);
+}
+
+vector<Producto> Sistema::productosUsables(Drone d, EstadoCultivo e)
+{
+  vector<Producto> result;
+  for(unsigned int i = 0; i < d.productosDisponibles().size(); i++)
+  {
+    if(sePuedeAplicarP(d.productosDisponibles()[i], e, d))
+      result.push_back(d.productosDisponibles()[i]);
+  }
+  return result;
+}
+
+bool Sistema::sePuedeAplicarP(Producto p, EstadoCultivo e, Drone d)
+{
+  if((e == RecienSembrado || e == EnCrecimiento) && p == Fertilizante)
+  {
+    if(d.bateria() > cuantoConsumeP(Fertilizante))
+      return true;
+  }
+  else if(e == ConMaleza)
+  {
+    if(p == Herbicida && (d.bateria() > cuantoConsumeP(Herbicida)))
+      return true;
+    else if(p == HerbicidaLargoAlcance && (d.bateria() > cuantoConsumeP(HerbicidaLargoAlcance)))
+      return true;
+  }
+  else if(e == ConPlaga)
+  {
+    if(p == Plaguicida && (d.bateria() > cuantoConsumeP(Plaguicida)))
+      return true;
+    else if(p == PlaguicidaBajoConsumo && (d.bateria() > cuantoConsumeP(PlaguicidaBajoConsumo)))
+      return true;
+  }
+  return false;
+}
+
+int Sistema::cuantoConsumeP(Producto p)
+{
+  if(p != Fertilizante)
+  {
+    if(p == Plaguicida)
+      return 10;
+    else
+      return 5;
+  }
+  return 0;
 }
 
 bool Sistema::operator==(const Sistema & otroSistema) const

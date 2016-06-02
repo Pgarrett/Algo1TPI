@@ -39,15 +39,19 @@ class Sistema
     Secuencia<Posicion> todasLasParcelasConCultivo() const;
     Posicion posicionGranero();
     Secuencia<Posicion> parcelasVecinas(Posicion p);
+    Secuencia<Posicion> parcelasVecinasConCultivo(Posicion p);
     Secuencia<Posicion> parcelasVecinasConPlaga(Posicion p);
+    Secuencia<Posicion> parcelasVecinasConMaleza(Posicion p);
     Secuencia<Posicion> parcelasVecinasLibres(Posicion p);
     Drone dronePorId(ID id);
-    void fertilizarPosicionActual(Drone d);
     void fertilizarFila(Drone d);
-    bool tieneFertilizante(Drone d);
-    vector<Producto> productosUsables(Drone d, EstadoCultivo e);
-    int cuantoConsumeP(Producto p);
-    bool sePuedeAplicarP(Producto p, EstadoCultivo e, Drone d);
+    void aplicarProductoEnPosicionActual(Drone d, Producto p);
+    void fertilizarPosicionActual(Drone d);
+
+    bool tieneProducto(Drone d, Producto p);
+    Secuencia<Producto> productosAplicables(EstadoCultivo ec);
+    int consumoDeBateria(Producto p);
+    EstadoCultivo estadoFinal(Producto p);
 
     //Para correr los tests (NO TOCAR)
     friend class test_sistema_lo_basico_crecer_funciona_ok_Test;

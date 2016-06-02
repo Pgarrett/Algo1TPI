@@ -114,55 +114,34 @@ void Sistema::aterrizarYCargarBaterias(Carga b)
 
 void Sistema::fertilizarPorFilas()
 {
-  for(int i=0; i<_enjambre.size(); i++)
+  for(unsigned int i=0; i<_enjambre.size(); i++)
   {
     Drone d = _enjambre[i];
     if(d.enVuelo())
-    {
       fertilizarFila(d);
-    }
   }
 }
 
 void Sistema::volarYSensar(const Drone & d)
 {
   Drone d1 = dronePorId(d.id());
-  // Por requiere sabemos que hay alguna parcela libre.
-  Posicion nuevaPosicion = parcelasVecinasLibres(d.posicionActual())[0];
-  d1.moverA(nuevaPosicion);
-  if(_campo.contenido(nuevaPosicion) != Cultivo || estadoDelCultivo(nuevaPosicion) == NoSensado)
+
+  // Sabemos que hay al menos una parcela libre por requiere.
+  d1.moverA(parcelasVecinasLibres(d1.posicionActual())[0]);
+  d1.setBateria(d.bateria()-1);
+  Posicion posicion = d1.posicionActual();
+
+  if(_campo.contenido(posicion) != Cultivo) return;
+  if(estadoDelCultivo(posicion) == NoSensado)
   {
-    if(_campo.contenido(nuevaPosicion) == Cultivo)
-      _estado.parcelas[nuevaPosicion.x][nuevaPosicion.y] = ListoParaCosechar;
-    d1.setBateria(d.bateria() - 1);
+    // Ponemos cualquier estado distinto de NoSensado
+    _estado.parcelas[posicion.x][posicion.y] = RecienSembrado;
+    return;
   }
-  else
-  {
-    vector<Producto> prodUsables = productosUsables(d1, estadoDelCultivo(nuevaPosicion));
-    if(prodUsables.size() == 0)
-      d1.setBateria(d.bateria() - 1);
-    else
-    {
-      Producto productoAUsar = prodUsables[0];
-      d1.setBateria(d.bateria() - cuantoConsumeP(productoAUsar));
-      d1.sacarProducto(productoAUsar);
-      for(unsigned int i = 0; i < todasLasParcelasConCultivo().size(); i++)
-      {
-        vector<Posicion> parcelasAdyacentes = parcelasVecinas(nuevaPosicion);
-        parcelasAdyacentes.push_back(nuevaPosicion);
-        for(unsigned int j = 0; j < parcelasAdyacentes.size() + 1; j++)
-        {
-          if(todasLasParcelasConCultivo()[i] == parcelasAdyacentes[j] && sePuedeAplicarP(productoAUsar, estadoDelCultivo(nuevaPosicion), d1))
-          {
-            if(productoAUsar == Fertilizante)
-              _estado.parcelas[nuevaPosicion.x][nuevaPosicion.y] = ListoParaCosechar;
-            else
-              _estado.parcelas[nuevaPosicion.x][nuevaPosicion.y] = RecienSembrado;
-          }
-        }
-      }
-    }
-  }
+
+  Secuencia<Producto> productos = productosAplicables(estadoDelCultivo(posicion));
+  if(productos.size() > 0)
+    aplicarProductoEnPosicionActual(d, productos[0]);
 }
 
 void Sistema::mostrar(std::ostream & os) const
@@ -325,14 +304,40 @@ Secuencia<Posicion> Sistema::parcelasVecinas(Posicion p)
     result.push_back(Posicion(p.x, p.y+1));
 }
 
+Secuencia<Posicion> Sistema::parcelasVecinasConCultivo(Posicion p)
+{
+  Secuencia<Posicion> vecinas = parcelasVecinas(p);
+  Secuencia<Posicion> result;
+
+  for(unsigned int i=0; i<vecinas.size(); i++)
+    if(_campo.contenido(vecinas[i]) == Cultivo)
+      result.push_back(vecinas[i]);
+
+  return result;
+}
+
 Secuencia<Posicion> Sistema::parcelasVecinasConPlaga(Posicion p)
 {
   Secuencia<Posicion> result;
-  Secuencia<Posicion> vecinas = parcelasVecinas(p);
+  Secuencia<Posicion> vecinas = parcelasVecinasConCultivo(p);
 
   for(unsigned int i = 0; i < vecinas.size(); i++)
   {
     if(_estado.parcelas[vecinas[i].x][vecinas[i].y] == ConPlaga)
+      result.push_back(vecinas[i]);
+  }
+
+  return result;
+}
+
+Secuencia<Posicion> Sistema::parcelasVecinasConMaleza(Posicion p)
+{
+  Secuencia<Posicion> result;
+  Secuencia<Posicion> vecinas = parcelasVecinasConCultivo(p);
+
+  for(unsigned int i = 0; i < vecinas.size(); i++)
+  {
+    if(_estado.parcelas[vecinas[i].x][vecinas[i].y] == ConMaleza)
       result.push_back(vecinas[i]);
   }
 
@@ -344,12 +349,14 @@ Secuencia<Posicion> Sistema::parcelasVecinasLibres(Posicion p)
   Secuencia<Posicion> parcelasLibres;
   Secuencia<Posicion> vecinas = parcelasVecinas(p);
 
-  for(int i = 0; i< vecinas.size(); i++)
+  for(unsigned int i = 0; i< vecinas.size(); i++)
   {
     bool ocupada = false;
-    for(int j = 0; j < _enjambre.size(); j++)
+    for(unsigned int j = 0; j < _enjambre.size(); j++)
+    {
       if(_enjambre[j].enVuelo() && _enjambre[j].posicionActual() == vecinas[i])
           ocupada = true;
+    }
 
     if(!ocupada)
       parcelasLibres.push_back(vecinas[i]);
@@ -367,10 +374,10 @@ Drone Sistema::dronePorId(ID id)
 
 void Sistema::fertilizarFila(Drone d)
 {
-  if(tieneFertilizante(d) && _campo.contenido(d.posicionActual()) == Cultivo)
+  if(tieneProducto(d, Fertilizante) && _campo.contenido(d.posicionActual()) == Cultivo)
     fertilizarPosicionActual(d);
 
-  while(d.posicionActual().x > 0 && tieneFertilizante(d) && d.bateria() > 0
+  while(d.posicionActual().x > 0 && tieneProducto(d, Fertilizante) && d.bateria() > 0
         && _campo.contenido(d.posicionActual()) == Cultivo)
   {
     d.moverA(d.posicionActual()-Posicion(1,0));
@@ -381,70 +388,69 @@ void Sistema::fertilizarFila(Drone d)
   }
 }
 
-// Lo definimos aca porque la consigna dice que no podemos modificar la parte publica de las clases.
-// En realidad iria en Drone.
-bool Sistema::tieneFertilizante(Drone d)
+void Sistema::aplicarProductoEnPosicionActual(Drone d, Producto p)
 {
-  Secuencia<Producto> productos = d.productosDisponibles();
-  for(int i=0; i<productos.size(); i++)
-    if(productos[i] == Fertilizante)
-      return true;
-  return false;
+  d.sacarProducto(p);
+  Posicion pos = d.posicionActual();
+  d.setBateria(d.bateria() - consumoDeBateria(p));
+  _estado.parcelas[pos.x][pos.y] = estadoFinal(p);
+
+  if(p == HerbicidaLargoAlcance)
+  {
+    Secuencia<Posicion> adyacentes = parcelasVecinasConMaleza(pos);
+    for(unsigned int i=0; i<adyacentes.size(); i++)
+      _estado.parcelas[adyacentes[i].x][adyacentes[i].y] = EnCrecimiento;
+  }
 }
 
 void Sistema::fertilizarPosicionActual(Drone d)
 {
+  d.sacarProducto(Fertilizante);
+  Posicion pos = d.posicionActual();
+
+  if(estadoDelCultivo(pos) == RecienSembrado || estadoDelCultivo(pos) == EnCrecimiento)
+    _estado.parcelas[pos.x][pos.y] = ListoParaCosechar;
+}
+
+// Lo definimos aca porque la consigna dice que no podemos modificar la parte publica de las clases.
+// En realidad iria en Drone.
+bool Sistema::tieneProducto(Drone d, Producto p)
+{
   Secuencia<Producto> productos = d.productosDisponibles();
-  for(int i=0; i<productos.size(); i++)
-    if(productos[i] == Fertilizante)
-      d.sacarProducto(Fertilizante);
-}
-
-vector<Producto> Sistema::productosUsables(Drone d, EstadoCultivo e)
-{
-  vector<Producto> result;
-  for(unsigned int i = 0; i < d.productosDisponibles().size(); i++)
-  {
-    if(sePuedeAplicarP(d.productosDisponibles()[i], e, d))
-      result.push_back(d.productosDisponibles()[i]);
-  }
-  return result;
-}
-
-bool Sistema::sePuedeAplicarP(Producto p, EstadoCultivo e, Drone d)
-{
-  if((e == RecienSembrado || e == EnCrecimiento) && p == Fertilizante)
-  {
-    if(d.bateria() > cuantoConsumeP(Fertilizante))
+  for(unsigned int i=0; i<productos.size(); i++)
+    if(productos[i] == p)
       return true;
-  }
-  else if(e == ConMaleza)
-  {
-    if(p == Herbicida && (d.bateria() > cuantoConsumeP(Herbicida)))
-      return true;
-    else if(p == HerbicidaLargoAlcance && (d.bateria() > cuantoConsumeP(HerbicidaLargoAlcance)))
-      return true;
-  }
-  else if(e == ConPlaga)
-  {
-    if(p == Plaguicida && (d.bateria() > cuantoConsumeP(Plaguicida)))
-      return true;
-    else if(p == PlaguicidaBajoConsumo && (d.bateria() > cuantoConsumeP(PlaguicidaBajoConsumo)))
-      return true;
-  }
   return false;
 }
 
-int Sistema::cuantoConsumeP(Producto p)
+Secuencia<Producto> Sistema::productosAplicables(EstadoCultivo ec)
 {
-  if(p != Fertilizante)
-  {
-    if(p == Plaguicida)
-      return 10;
-    else
-      return 5;
-  }
-  return 0;
+  Secuencia<Producto> fertilizantes;
+  fertilizantes.push_back(Fertilizante);
+  if(ec == RecienSembrado || ec == EnCrecimiento) return fertilizantes;
+  
+  Secuencia<Producto> plaguicidas;
+  plaguicidas.push_back(Plaguicida);
+  plaguicidas.push_back(PlaguicidaBajoConsumo);
+  if(ec == ConPlaga) return plaguicidas;
+  
+  Secuencia<Producto> herbicidas;
+  plaguicidas.push_back(Herbicida);
+  plaguicidas.push_back(HerbicidaLargoAlcance);
+  if(ec == ConMaleza) return herbicidas;
+}
+
+int Sistema::consumoDeBateria(Producto p)
+{
+  if(p == Fertilizante) return 0;
+  else if(p == Plaguicida) return 10;
+  else return 5;
+}
+
+EstadoCultivo Sistema::estadoFinal(Producto p)
+{
+  if(p == Fertilizante) return ListoParaCosechar;
+  else return RecienSembrado;
 }
 
 bool Sistema::operator==(const Sistema & otroSistema) const

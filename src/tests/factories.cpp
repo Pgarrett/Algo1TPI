@@ -22,8 +22,10 @@ Drone un_drone() {
     return Drone(1, algunos_productos());
 }
 
-Secuencia<Drone> algunos_drones() {
+Secuencia<Drone> algunos_drones_en_granero(Posicion posG) {
     Drone d1(1, algunos_productos());
-    Drone d2(1, otros_productos());
+    Drone d2(2, otros_productos());
+    d1.cambiarPosicionActual(posG);
+    d2.cambiarPosicionActual(posG);
     return {d1, d2};
 }

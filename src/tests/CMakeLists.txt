@@ -5,7 +5,7 @@ add_subdirectory(lib/googletest-release-1.7.0)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 add_executable(correrTests
-        factories.h factories.cpp aux.h
+        factories.h factories.cpp auxiliares.h
         test_campo.cpp
         test_drone_lo_basico.cpp
         test_drone_vuelo_escalerado.cpp

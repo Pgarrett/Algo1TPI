@@ -6,7 +6,7 @@
 #include "drone.h"
 #include "sistema.h"
 
-#include "auxiliares.cpp"
+#include "aux.cpp"
 
 using namespace std;
 

@@ -66,7 +66,7 @@ void Campo::guardar(std::ostream &os) const
   for(int i=0; i<_dimension.ancho; i++)
   {
     os << "[";
-    os << _grilla.parcelas[i][0];
+    os << this->_grilla.parcelas[i][0];
 
     for(int j=1; j<_dimension.largo; j++)
     {
@@ -84,7 +84,7 @@ void Campo::cargar(std::istream &is)
 {
   char b; // Para guardar basura / caracteres que no nos interesan.
   is >> b >> b >> b >> _dimension.ancho >> b >> _dimension.largo >> b >> b;
-
+  _grilla = Grilla<Parcela>(_dimension);
   for(int i=0; i<_dimension.ancho; i++)
   {
     is >> b;

@@ -60,19 +60,13 @@ void Sistema::seVinoLaMaleza(const Secuencia<Posicion>& ps)
 
 void Sistema::seExpandePlaga()
 {
-  Dimension dimensionCampo = _campo.dimensiones();
+  Secuencia<Posicion> parcelas = todasLasParcelasConCultivo();
   Grilla<EstadoCultivo> estadoPrevio = _estado;
-  for(int i = 0; i < dimensionCampo.ancho; i++)
+  for(int i = 0; i < parcelas.size(); i++)
   {
-    for(int j = 0; j < dimensionCampo.largo; j++)
-    {
-      if(_campo.contenido(Posicion(i,j)) == Cultivo)
-      {
-        vector<Posicion> vecinasConPlaga = parcelasVecinasConPlaga(Posicion(i, j), estadoPrevio);
-        if(vecinasConPlaga.size() > 0)
-          _estado.parcelas[i][j] = ConPlaga;
-      }
-    }
+    vector<Posicion> vecinasConPlaga = parcelasVecinasConPlaga(parcelas[i], estadoPrevio);
+    if(vecinasConPlaga.size() > 0)
+      _estado.parcelas[parcelas[i].x][parcelas[i].y] = ConPlaga;
   }
 }
 

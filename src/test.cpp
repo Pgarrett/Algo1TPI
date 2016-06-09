@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 #include "tipos.h"
 #include "campo.h"
@@ -30,6 +31,19 @@ inline void campo_test()
   istringstream iss("{ C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]}");
   c.cargar(iss);
   c.guardar(cout);
+  cout << endl;
+  cout << endl;
+
+  Campo c3;
+  std::ifstream in("test_campo.txt");
+  c3.cargar(in);
+  in.close();
+  c3.guardar(cout);
+  cout << endl;
+  cout << endl;
+
+  Campo c4({0,0}, {0, 1}, {3, 3});
+  c4.guardar(cout);
   cout << endl;
   cout << endl;
 }
@@ -79,7 +93,8 @@ inline void drone_test()
   cout << endl;
   mostrarSecuencia(cout, Drone::vuelosCruzados(ds));
   cout << endl;
-  istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}");
+  //istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}");
+  istringstream iss("{ D 1 100 [] [HerbicidaLargoAlcance,PlaguicidaBajoConsumo,Herbicida] false [1,3]}");
   d.cargar(iss);
   d.guardar(cout);
   cout << endl;

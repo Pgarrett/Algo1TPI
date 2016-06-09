@@ -15,7 +15,7 @@ Drone::Drone(ID i, const std::vector<Producto>& ps)
   _trayectoria = Secuencia<Posicion>();
   _productos = ps;
   _enVuelo = false;
-  _posicionActual;
+  _posicionActual = {0,0};
 }
 
 ID Drone::id() const
@@ -90,7 +90,8 @@ Secuencia<InfoVueloCruzado> Drone::vuelosCruzados(const Secuencia<Drone>& ds)
 
 void Drone::mostrar(std::ostream & os) const
 {
-  os << "{ D " << _id << " " << _bateria << " }";
+  //os << "{ D " << _id << " " << _bateria << " }";
+  guardar(os);
 }
 
 // { D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}
@@ -107,8 +108,10 @@ void Drone::guardar(std::ostream & os) const
 
 void Drone::cargar(std::istream & is)
 {
-  _trayectoria.clear();
-  _productos.clear();
+  //_trayectoria.clear();
+  _trayectoria = Secuencia<Posicion>();
+  //_productos.clear();
+  _productos = Secuencia<Producto>();
 
   char b;
   is >> b;
@@ -120,10 +123,14 @@ void Drone::cargar(std::istream & is)
 
   while(b != ']')
   {
-    Posicion p = Posicion();
-    is >> b >> p.x >> b >> p.y >> b;
-    _trayectoria.push_back(p);
     is >> b;
+    if (b == '[')
+    {
+      Posicion p = Posicion();
+      is >> p.x >> b >> p.y >> b;
+      _trayectoria.push_back(p);
+      is >> b;
+    }
   }
   is >> b;
 

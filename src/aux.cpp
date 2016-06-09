@@ -19,29 +19,22 @@ inline void mostrarSecuencia(std::ostream & os, const Secuencia<T> & s)
   os << "]";
 }
 
-template <class T>
-inline bool mismos(const Secuencia<T> & v1, const Secuencia<T> & v2)
-{
-  if(v1.size() != v2.size())
-    return false;
-
-  for(unsigned int i=0; i<v1.size(); i++)
-  {
-    if(cuenta(v1, v1[i]) != cuenta(v2, v1[i]))
-      return false;
-  }
-
-  return true;
+template<class T>
+unsigned int cuenta(const T &x, const std::vector<T> &v) {
+    unsigned int cant = 0;
+    for (unsigned int i = 0; i < v.size(); ++i) {
+        if (x == v[i]) ++cant;
+    }
+    return cant;
 }
 
-template <class T>
-inline int cuenta(const Secuencia<T> & v, T elemento)
-{
-  int contador = 0;
-  for(unsigned int i=0; i<v.size(); i++)
-    if(v[i] == elemento)
-      contador++;
-  return contador;
+template<class T>
+bool mismos(const std::vector<T> &a, const std::vector<T> &b) {
+    bool res = a.size() == b.size();
+    for (unsigned int i = 0; res && i < a.size(); ++i) {
+        res = cuenta(a[i], a) == cuenta(a[i], b);
+    }
+    return res;
 }
 
 template <class T>

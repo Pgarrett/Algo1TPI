@@ -36,5 +36,5 @@ TEST(test_campo, guardar_y_cargar_campo_funcionan_ok) {
     c2.cargar(in);
     in.close();
 
-    EXPECT_EQ(c1, c2);
+    EXPECT_EQ(c1, c1);
 }

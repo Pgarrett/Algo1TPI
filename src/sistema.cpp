@@ -293,7 +293,7 @@ Posicion Sistema::posicionGranero()
 
 Secuencia<Posicion> Sistema::parcelasVecinas(Posicion p)
 {
-  Secuencia<Posicion> result;
+  Secuencia<Posicion> result = Secuencia<Posicion>();
   Dimension dimensionCampo = _campo.dimensiones();
 
   if(p.x-1 >= 0)
@@ -307,12 +307,14 @@ Secuencia<Posicion> Sistema::parcelasVecinas(Posicion p)
 
   if(p.y+1 < dimensionCampo.largo)
     result.push_back(Posicion(p.x, p.y+1));
+
+  return result;
 }
 
 Secuencia<Posicion> Sistema::parcelasVecinasConCultivo(Posicion p)
 {
   Secuencia<Posicion> vecinas = parcelasVecinas(p);
-  Secuencia<Posicion> result;
+  Secuencia<Posicion> result = Secuencia<Posicion>();
 
   for(unsigned int i=0; i<vecinas.size(); i++)
     if(_campo.contenido(vecinas[i]) == Cultivo)

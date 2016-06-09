@@ -15,7 +15,6 @@ Drone::Drone(ID i, const std::vector<Producto>& ps)
   _trayectoria = Secuencia<Posicion>();
   _productos = ps;
   _enVuelo = false;
-  _posicionActual;
 }
 
 ID Drone::id() const

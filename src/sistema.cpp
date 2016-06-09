@@ -262,9 +262,6 @@ void Sistema::cargar(std::istream & is)
       else
         _estado.parcelas[i][j] = estadoCultivo(estadoC);
 
-      //string parcela;
-      //getline(is, parcela, ',');
-      //is >> b;
     }
     is >> b;
   }

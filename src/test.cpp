@@ -17,6 +17,26 @@ inline std::ostream & operator<<(std::ostream & os, const InfoVueloCruzado & i)
   return os;
 }
 
+Campo un_campo() {
+    return Campo({5, 15}, {10, 20});
+}
+
+std::vector<Producto> algunos_productos() {
+    return {HerbicidaLargoAlcance, PlaguicidaBajoConsumo, Herbicida};
+}
+
+std::vector<Producto> otros_productos() {
+    return {Fertilizante, PlaguicidaBajoConsumo, Herbicida};
+}
+
+std::vector<Producto> algunos_productos_pero_en_otro_orden() {
+    return {HerbicidaLargoAlcance, Herbicida, PlaguicidaBajoConsumo};
+}
+
+Drone un_drone() {
+    return Drone(1, algunos_productos());
+}
+
 inline void campo_test()
 {
   Posicion p(1,2);
@@ -99,6 +119,17 @@ inline void drone_test()
   cout << endl;
 }
 
+Drone buscarDroneEnSistema(Drone &elDrone, Sistema &s1) {
+    Drone elDroneEnElSistema;
+    for (int i = 0; i < s1.enjambreDrones().size(); i++) {
+        if (s1.enjambreDrones()[i].id() == elDrone.id()) {
+            elDroneEnElSistema = s1.enjambreDrones()[i];
+            break;
+        }
+    }
+    return elDroneEnElSistema;
+}
+
 inline void sistema_test()
 {
   Posicion p(1,2);
@@ -141,13 +172,27 @@ inline void sistema_test()
 
   Sistema s(c, ds);
   s.seVinoLaMaleza(d2.vueloRealizado());
+  
+  Posicion posG = {0, 0};
 
-  s.guardar(cout);
+  Drone elDrone = un_drone();
+  elDrone.cambiarPosicionActual(posG);
+
+  Campo el_campo(posG, {2, 2});
+  Sistema s1(el_campo, {elDrone});
+
+  s1.despegar(elDrone);
+  
+  Drone dd = buscarDroneEnSistema(elDrone, s1);
+  
+  cout << s1 << dd;
+
+  //s.guardar(cout);
   cout << endl;
   cout << endl;
   istringstream isS("{ S { C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]} [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}, { D 15 46 [[0,1],[1,1],[2,1],[2,2]] [HerbicidaLargoAlcance,Fertilizante,Plaguicida] true [2,2]}] [[NoSensado,EnCrecimiento,NoSensado],[ConMaleza,NoSensado,ConPlaga],[EnCrecimiento,ListoParaCosechar,ConPlaga]]}");
   s.cargar(isS);
-  s.guardar(cout);
+  //s.guardar(cout);
   cout << endl;
   cout << endl;
 }

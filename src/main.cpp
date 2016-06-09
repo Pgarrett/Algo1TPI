@@ -4,9 +4,9 @@
 
 int main()
 {
-  campo_test();
+  //campo_test();
   std::cout << endl << endl;
-  drone_test();
+  //drone_test();
   std::cout << endl << endl;
   sistema_test();
   return 0;

@@ -72,9 +72,11 @@ void Sistema::seExpandePlaga()
 
 void Sistema::despegar(const Drone & d)
 {
-  Drone d1 = dronePorId(d.id());
   // Por requiere sabemos que hay alguna parcela libre.
-  d1.moverA(parcelasVecinasLibres(posicionGranero())[0]);
+  Posicion p = parcelasVecinasLibres(posicionGranero())[0];
+  for(unsigned int i=0; i<_enjambre.size(); i++)
+    if(_enjambre[i].id() == d.id())
+      _enjambre[i].moverA(p);
 }
 
 bool Sistema::listoParaCosechar() const
@@ -328,7 +330,6 @@ Secuencia<Posicion> Sistema::parcelasVecinasConPlaga(Posicion p, Grilla<EstadoCu
 
   for(unsigned int i = 0; i < vecinas.size(); i++)
   {
-    //if(_estado.parcelas[vecinas[i].x][vecinas[i].y] == ConPlaga)
     if(estadoPrevio.parcelas[vecinas[i].x][vecinas[i].y] == ConPlaga)
       result.push_back(vecinas[i]);
   }

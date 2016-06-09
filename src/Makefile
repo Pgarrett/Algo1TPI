@@ -5,13 +5,13 @@ clean:
 	rm -f main
 
 main: main.cpp tipos.o auxiliares.o campo.o drone.o sistema.o
-	g++ $(CXXFLAGS) -g -Wall -o main main.cpp tipos.o aux.o campo.o drone.o sistema.o
+	g++ $(CXXFLAGS) -g -Wall -o main main.cpp tipos.o auxiliares.o campo.o drone.o sistema.o
 
 tipos.o: tipos.h tipos.cpp
 	g++ $(CXXFLAGS) -g -Wall -c tipos.cpp
 
 auxiliares.o: auxiliares.h auxiliares.cpp
-	g++ $(CXXFLAGS) -g -Wall -c aux.cpp
+	g++ $(CXXFLAGS) -g -Wall -c auxiliares.cpp
 
 campo.o: campo.h campo.cpp
 	g++ $(CXXFLAGS) -g -Wall -c campo.cpp

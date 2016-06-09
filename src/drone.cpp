@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "drone.h"
-#include "aux.cpp"
+#include "auxiliares.cpp"
 
 using namespace std;
 
@@ -15,6 +15,7 @@ Drone::Drone(ID i, const std::vector<Producto>& ps)
   _trayectoria = Secuencia<Posicion>();
   _productos = ps;
   _enVuelo = false;
+  _posicionActual = Posicion(0,0); // Le asignamos alguna posicion inicial.
 }
 
 ID Drone::id() const

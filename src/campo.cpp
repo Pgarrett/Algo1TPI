@@ -60,8 +60,7 @@ void Campo::guardar(std::ostream &os) const
   os << "[";
   for(int i=0; i<_dimension.ancho; i++)
   {
-    os << "[";
-    os << this->_grilla.parcelas[i][0];
+    os << "[" << _grilla.parcelas[i][0];
 
     for(int j=1; j<_dimension.largo; j++)
     {

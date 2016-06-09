@@ -2,7 +2,7 @@
 #include <sstream>
 
 #include "sistema.h"
-#include "aux.cpp"
+#include "auxiliares.cpp"
 
 using namespace std;
 

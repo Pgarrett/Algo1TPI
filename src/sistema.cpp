@@ -61,13 +61,17 @@ void Sistema::seVinoLaMaleza(const Secuencia<Posicion>& ps)
 void Sistema::seExpandePlaga()
 {
   Dimension dimensionCampo = _campo.dimensiones();
+  Grilla<EstadoCultivo> estadoPrevio = _estado;
   for(int i = 0; i < dimensionCampo.ancho; i++)
   {
     for(int j = 0; j < dimensionCampo.largo; j++)
     {
-      vector<Posicion> vecinasConPlaga = parcelasVecinasConPlaga(Posicion(i, j));
-      if(vecinasConPlaga.size() > 0)
-        _estado.parcelas[i][j] = ConPlaga;
+      if(_campo.contenido(Posicion(i,j)) == Cultivo)
+      {
+        vector<Posicion> vecinasConPlaga = parcelasVecinasConPlaga(Posicion(i, j), estadoPrevio);
+        if(vecinasConPlaga.size() > 0)
+          _estado.parcelas[i][j] = ConPlaga;
+      }
     }
   }
 }
@@ -323,14 +327,15 @@ Secuencia<Posicion> Sistema::parcelasVecinasConCultivo(Posicion p)
   return result;
 }
 
-Secuencia<Posicion> Sistema::parcelasVecinasConPlaga(Posicion p)
+Secuencia<Posicion> Sistema::parcelasVecinasConPlaga(Posicion p, Grilla<EstadoCultivo> estadoPrevio)
 {
   Secuencia<Posicion> result = Secuencia<Posicion>();
   Secuencia<Posicion> vecinas = parcelasVecinasConCultivo(p);
 
   for(unsigned int i = 0; i < vecinas.size(); i++)
   {
-    if(_estado.parcelas[vecinas[i].x][vecinas[i].y] == ConPlaga)
+    //if(_estado.parcelas[vecinas[i].x][vecinas[i].y] == ConPlaga)
+    if(estadoPrevio.parcelas[vecinas[i].x][vecinas[i].y] == ConPlaga)
       result.push_back(vecinas[i]);
   }
 

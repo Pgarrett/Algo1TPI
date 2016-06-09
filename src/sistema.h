@@ -40,7 +40,7 @@ class Sistema
     Posicion posicionGranero();
     Secuencia<Posicion> parcelasVecinas(Posicion p);
     Secuencia<Posicion> parcelasVecinasConCultivo(Posicion p);
-    Secuencia<Posicion> parcelasVecinasConPlaga(Posicion p);
+    Secuencia<Posicion> parcelasVecinasConPlaga(Posicion p, Grilla<EstadoCultivo> estadoPrevio);
     Secuencia<Posicion> parcelasVecinasConMaleza(Posicion p);
     Secuencia<Posicion> parcelasVecinasLibres(Posicion p);
     Drone dronePorId(ID id);

@@ -73,5 +73,3 @@ inline vector<string> splitVector(string str, char delimiter)
   }
   return result;
 }
-
-

@@ -72,11 +72,9 @@ void Sistema::seExpandePlaga()
 
 void Sistema::despegar(const Drone & d)
 {
+  Drone & d1 = dronePorId(d.id());
   // Por requiere sabemos que hay alguna parcela libre.
-  Posicion p = parcelasVecinasLibres(posicionGranero())[0];
-  for(unsigned int i=0; i<_enjambre.size(); i++)
-    if(_enjambre[i].id() == d.id())
-      _enjambre[i].moverA(p);
+  d1.moverA(parcelasVecinasLibres(posicionGranero())[0]);
 }
 
 bool Sistema::listoParaCosechar() const
@@ -94,8 +92,8 @@ bool Sistema::listoParaCosechar() const
       cultivosCosechables++;
     i++;
   }
-
-  return (cultivosCosechables/parcelasConCultivo) >= 0.9;
+  
+  return ((double)cultivosCosechables/(double)parcelasConCultivo) >= 0.9;
 }
 
 void Sistema::aterrizarYCargarBaterias(Carga b)
@@ -124,35 +122,39 @@ void Sistema::fertilizarPorFilas()
 
 void Sistema::volarYSensar(const Drone & d)
 {
-  Drone d1 = dronePorId(d.id());
+  Drone & d1 = dronePorId(d.id());
 
   // Sabemos que hay al menos una parcela libre por requiere.
-  d1.moverA(parcelasVecinasLibres(d1.posicionActual())[0]);
-  d1.setBateria(d.bateria()-1);
-  Posicion posicion = d1.posicionActual();
-
+  Posicion posicion = parcelasVecinasLibres(d1.posicionActual())[0];
+  d1.moverA(posicion);
+  d1.setBateria(d1.bateria()-1);
+  
   if(_campo.contenido(posicion) != Cultivo) return;
   if(estadoDelCultivo(posicion) == NoSensado)
   {
     // Ponemos cualquier estado distinto de NoSensado
     _estado.parcelas[posicion.x][posicion.y] = RecienSembrado;
-    return;
   }
-
+  
   Secuencia<Producto> productos = productosAplicables(estadoDelCultivo(posicion));
   if(productos.size() > 0)
-    aplicarProductoEnPosicionActual(d, productos[0]);
+    aplicarProductoEnPosicionActual(d1, productos[0]);
 }
 
 void Sistema::mostrar(std::ostream & os) const
 {
   os << "{ S ";
-  _campo.mostrar(os);
+  _campo.guardar(os);
+
+  os << " [";
   for(unsigned int i = 0; i < _enjambre.size(); i++)
   {
-    _enjambre[i].mostrar(os);
+    _enjambre[i].guardar(os);
+    if (i < _enjambre.size()-1)
+      os << ", ";
   }
-  os << " }";
+  os << "]";
+  os << "]}";
 }
 
 //{ S { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}
@@ -234,9 +236,8 @@ void Sistema::cargar(std::istream & is)
         is >> b;
       }
 
-      Posicion p(i,j);
       // Dado que no esta especificado que estado tienen las parcelas que no son de cultivo, le ponemos NoSensado
-      if(_campo.contenido(p) != Cultivo)
+      if(_campo.contenido(Posicion(i,j)) != Cultivo)
         _estado.parcelas[i][j] = NoSensado;
       else
         _estado.parcelas[i][j] = estadoCultivo(estadoC);
@@ -372,7 +373,7 @@ Secuencia<Posicion> Sistema::parcelasVecinasLibres(Posicion p)
   return parcelasLibres;
 }
 
-Drone Sistema::dronePorId(ID id)
+Drone & Sistema::dronePorId(ID id)
 {
   for(unsigned int i=0; i<_enjambre.size(); i++)
     if(_enjambre[i].id() == id)
@@ -445,6 +446,8 @@ Secuencia<Producto> Sistema::productosAplicables(EstadoCultivo ec)
   plaguicidas.push_back(Herbicida);
   plaguicidas.push_back(HerbicidaLargoAlcance);
   if(ec == ConMaleza) return herbicidas;
+  
+  return Secuencia<Producto>();
 }
 
 int Sistema::consumoDeBateria(Producto p)

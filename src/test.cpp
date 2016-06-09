@@ -132,7 +132,7 @@ Drone buscarDroneEnSistema(Drone &elDrone, Sistema &s1) {
 
 inline void sistema_test()
 {
-  Posicion p(1,2);
+  /*Posicion p(1,2);
   Posicion g(3,1);
 
   Campo c(p, g);
@@ -171,28 +171,58 @@ inline void sistema_test()
   ds.push_back(d2);
 
   Sistema s(c, ds);
-  s.seVinoLaMaleza(d2.vueloRealizado());
-  
-  Posicion posG = {0, 0};
+  //s.seVinoLaMaleza(d2.vueloRealizado());
 
   Drone elDrone = un_drone();
   elDrone.cambiarPosicionActual(posG);
 
-  Campo el_campo(posG, {2, 2});
-  Sistema s1(el_campo, {elDrone});
+  //Sistema s1(el_campo, {elDrone});
 
-  s1.despegar(elDrone);
+  //s1.despegar(elDrone);
   
-  Drone dd = buscarDroneEnSistema(elDrone, s1);
-  
-  cout << s1 << dd;
+  //Drone dd = buscarDroneEnSistema(elDrone, s1);
 
-  //s.guardar(cout);
+  //s1.guardar(cout);
+  //cout << endl;
+  //cout << endl;
+  //cout << 'a' << endl;
+  */
+  /*istringstream isS("{ S { C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]} [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}, { D 15 46 [[0,1],[1,1],[2,1],[2,2]] [HerbicidaLargoAlcance,Fertilizante,Plaguicida] true [2,2]}] [[NoSensado,EnCrecimiento,NoSensado],[ConMaleza,NoSensado,ConPlaga],[EnCrecimiento,ListoParaCosechar,ConPlaga]]}");
+  s.cargar(isS);*/
+  
+  /*s.guardar(cout);
+  cout << endl << endl;
+  d.borrarVueloRealizado();
+  s.volarYSensar(d);
+  s.guardar(cout);*/
+  
   cout << endl;
   cout << endl;
-  istringstream isS("{ S { C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]} [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}, { D 15 46 [[0,1],[1,1],[2,1],[2,2]] [HerbicidaLargoAlcance,Fertilizante,Plaguicida] true [2,2]}] [[NoSensado,EnCrecimiento,NoSensado],[ConMaleza,NoSensado,ConPlaga],[EnCrecimiento,ListoParaCosechar,ConPlaga]]}");
-  s.cargar(isS);
-  //s.guardar(cout);
-  cout << endl;
-  cout << endl;
+  
+    Posicion posG{5, 10};
+    Drone d1(1,algunos_productos());
+    d1.cambiarPosicionActual(posG);
+
+    Secuencia<Drone> ds = Secuencia<Drone>();
+    ds.push_back(d1);
+    Sistema s1(Campo(posG, {10, 10}), ds);
+
+    //cout << s1.estadoDelCultivo({4,10});
+
+    s1.volarYSensar(ds[0]);
+    s1.volarYSensar(ds[0]);
+    //s1.mostrar(cout);
+    
+    char fname[] = "test_sistema.txt";
+    std::ofstream out;
+    out.open(fname);
+    //s1.guardar(cout);
+    out.close();
+    
+    //cout << s1.estadoDelCultivo({4,10});
+
+    /*Sistema s2;
+    std::ifstream in(fname);
+    s2.cargar(in);
+    in.close();*/
 }

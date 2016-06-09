@@ -43,7 +43,7 @@ class Sistema
     Secuencia<Posicion> parcelasVecinasConPlaga(Posicion p, Grilla<EstadoCultivo> estadoPrevio);
     Secuencia<Posicion> parcelasVecinasConMaleza(Posicion p);
     Secuencia<Posicion> parcelasVecinasLibres(Posicion p);
-    Drone dronePorId(ID id);
+    Drone & dronePorId(ID id);
     void fertilizarFila(Drone d);
     void aplicarProductoEnPosicionActual(Drone d, Producto p);
     void fertilizarPosicionActual(Drone d);

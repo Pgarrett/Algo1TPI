@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "drone.h"
-#include "auxiliares.cpp"
+#include "aux.cpp"
 
 using namespace std;
 

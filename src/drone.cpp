@@ -92,7 +92,7 @@ void Drone::mostrar(std::ostream & os) const
   os << "{ D " << _id << " " << _bateria << " }";
 }
 
-// { D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}
+// { D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}
 void Drone::guardar(std::ostream & os) const
 {
   os << "{ D " << _id << " " << _bateria << " ";
@@ -101,7 +101,7 @@ void Drone::guardar(std::ostream & os) const
   os << " ";
 
   mostrarSecuencia(os, _productos);
-  os << "}";
+  os << " " << boolalpha << _enVuelo << " " << _posicionActual << "}";
 }
 
 void Drone::cargar(std::istream & is)
@@ -110,7 +110,12 @@ void Drone::cargar(std::istream & is)
   _productos.clear();
 
   char b;
-  is >> b >> b >> _id >> _bateria >> b;
+  is >> b;
+  if (b != 'D')
+  {
+    is >> b;
+  }
+  is >> _id >> _bateria >> b;
 
   while(b != ']')
   {
@@ -126,12 +131,18 @@ void Drone::cargar(std::istream & is)
   vector<string> productos = splitVector(productosString, ',');
   for(unsigned int i = 0; i < productos.size(); i++)
     _productos.push_back(tipoDeProducto(productos[i]));
+  is >> boolalpha >> _enVuelo;
+  while(b != ']')
+  {
+    is >> b >> _posicionActual.x >> b >> _posicionActual.y >> b;
+  }
 }
 
 void Drone::moverA(const Posicion pos)
 {
   _enVuelo = true;
   _trayectoria.push_back(pos);
+  _posicionActual = pos;
 }
 
 void Drone::setBateria(const Carga c)

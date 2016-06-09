@@ -6,6 +6,11 @@ using namespace std;
 
 Campo::Campo()
 {
+    _dimension.ancho = 3;
+    _dimension.largo = 3;
+    _grilla = Grilla<Parcela>(_dimension);
+    _grilla.parcelas[2][0] = Granero;
+    _grilla.parcelas[1][1] = Casa;
 }
 
 Campo::Campo(const Posicion &posG, const Posicion &posC, Dimension dimension) {
@@ -52,7 +57,7 @@ void Campo::mostrar(std::ostream &os) const
   os << "[" << _dimension.ancho << "," << _dimension.largo << "]}";
 }
 
-// { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}
+// { C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]}
 void Campo::guardar(std::ostream &os) const
 {
   os << "{ C [" << _dimension.ancho << "," << _dimension.largo << "] ";
@@ -69,7 +74,7 @@ void Campo::guardar(std::ostream &os) const
     }
 
     if(i<_dimension.ancho-1)
-      os << "], ";
+      os << "],";
   }
 
   os << "]]}";
@@ -83,10 +88,14 @@ void Campo::cargar(std::istream &is)
   for(int i=0; i<_dimension.ancho; i++)
   {
     is >> b;
-    for(int j=1; j<_dimension.largo; j++)
+    for(int j=0; j<_dimension.largo; j++)
     {
       string parcela;
-      getline(is, parcela, ',');
+      if (j < _dimension.largo - 1)
+        getline(is, parcela, ',');
+      else
+        getline(is, parcela, ']');
+
       _grilla.parcelas[i][j] = tipoDeParcela(parcela);
     }
     is >> b;

@@ -190,9 +190,9 @@ void Sistema::guardar(std::ostream & os) const
   {
     _enjambre[i].guardar(os);
     if (i < _enjambre.size()-1)
-      os << ",";
+      os << ", ";
   }
-  os << "]";
+  os << "] [";
 
   Dimension d = _campo.dimensiones();
   for(int i=0; i<d.ancho; i++)
@@ -211,12 +211,10 @@ void Sistema::guardar(std::ostream & os) const
   os << "]]}";
 }
 
-// { S
-//  { C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}
-//  [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]},
-//   { D 15 46 [[0,1],[1,1][2,1][2,2]] [HerbicidaLargoAlcance, Fertilizante, Herbicida, Plaguicida]}
-//  ]
-//  [[NoSensado,EnCrecimiento,NoSensado], [ConMaleza,NoSensado,ConPlaga], [EnCrecimiento,ListoParaCosechar, ConPlaga]] }
+// { S{ C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]}
+//[{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]},
+//{ D 15 46 [[0,1],[1,1],[2,1],[2,2]] [HerbicidaLargoAlcance,Fertilizante,Plaguicida] true [2,2]}]
+//[[NoSensado,EnCrecimiento,NoSensado],[ConMaleza,NoSensado,ConPlaga],[EnCrecimiento,ListoParaCosechar,ConPlaga]]}
 void Sistema::cargar(std::istream & is)
 {
   _campo = Campo();
@@ -226,15 +224,24 @@ void Sistema::cargar(std::istream & is)
   is >> b >> b;
   _campo.cargar(is);
 
-  string todosLosDrones;
-  getline(is, todosLosDrones, ']');
-  vector<string> drones = splitVector(todosLosDrones, ',');
+  is >> b >> b >> b;
+  while(b != ']')
+  {
+    string drone;
+    getline(is, drone, '}');
+    stringstream ss(drone);
+    Drone d;
+    d.cargar(ss);
+    _enjambre.push_back(d);
+    is >> b;
+  }
 
   Dimension dimensionCampo = _campo.dimensiones();
   _estado = Grilla<EstadoCultivo>(dimensionCampo);
+  is >> b >> b;
   for(int i=0; i<dimensionCampo.ancho; i++)
   {
-    is >> b;
+    //is >> b;
     string estadoC;
     for(int j=0; j<dimensionCampo.largo; j++)
     {
@@ -253,10 +260,11 @@ void Sistema::cargar(std::istream & is)
       if(_campo.contenido(p) != Cultivo)
         _estado.parcelas[i][j] = NoSensado;
       else
-        _estado.parcelas[i][j] = estadoDelCultivo(p);
+        _estado.parcelas[i][j] = estadoCultivo(estadoC);
 
-      string parcela;
-      getline(is, parcela, ',');
+      //string parcela;
+      //getline(is, parcela, ',');
+      //is >> b;
     }
     is >> b;
   }

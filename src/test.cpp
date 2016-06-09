@@ -26,9 +26,12 @@ inline void campo_test()
   Campo c2(p, g);
 
   cout << (c == c2);
-  istringstream iss("{ C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}");
+  cout << endl;
+  istringstream iss("{ C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]}");
   c.cargar(iss);
   c.guardar(cout);
+  cout << endl;
+  cout << endl;
 }
 
 inline void drone_test()
@@ -66,15 +69,21 @@ inline void drone_test()
   ds.push_back(d);
   ds.push_back(d2);
 
+  cout << endl;
   d.guardar(cout);
+  cout << endl;
   cout << d.vueloEscalerado() << endl << endl;
   d.guardar(cout);
   cout << endl;
   d2.guardar(cout);
   cout << endl;
   mostrarSecuencia(cout, Drone::vuelosCruzados(ds));
-  //istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [Plaguicida, PlaguicidaBajoConsumo, Herbicida, Fertilizante]}");
-  //d.cargar(iss);
+  cout << endl;
+  istringstream iss("{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}");
+  d.cargar(iss);
+  d.guardar(cout);
+  cout << endl;
+  cout << endl;
 }
 
 inline void sistema_test()
@@ -86,7 +95,7 @@ inline void sistema_test()
   g.x = 4;
   Campo c2(p, g);
 
-  istringstream iss("{ C [3,3] [[Cultivo,Cultivo,Granero], [Cultivo,Casa,Cultivo], [Cultivo, Cultivo,Cultivo]]}");
+  istringstream iss("{ C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]}");
   c.cargar(iss);
 
   vector<Producto> ps;
@@ -121,4 +130,11 @@ inline void sistema_test()
   s.seVinoLaMaleza(d2.vueloRealizado());
 
   s.guardar(cout);
+  cout << endl;
+  cout << endl;
+  istringstream isS("{ S { C [3,3] [[Cultivo,Cultivo,Granero],[Cultivo,Casa,Cultivo],[Cultivo,Cultivo,Cultivo]]} [{ D 12 83 [[1,2],[1,1],[1,0],[2,0]] [PlaguicidaBajoConsumo,Herbicida,Fertilizante] true [2,0]}, { D 15 46 [[0,1],[1,1],[2,1],[2,2]] [HerbicidaLargoAlcance,Fertilizante,Plaguicida] true [2,2]}] [[NoSensado,EnCrecimiento,NoSensado],[ConMaleza,NoSensado,ConPlaga],[EnCrecimiento,ListoParaCosechar,ConPlaga]]}");
+  s.cargar(isS);
+  s.guardar(cout);
+  cout << endl;
+  cout << endl;
 }

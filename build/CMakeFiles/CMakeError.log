@@ -1,0 +1,57 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2075280555/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2075280555.dir/build.make CMakeFiles/cmTryCompileExec2075280555.dir/build
+make[1]: Entering directory '/home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2075280555.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2075280555.dir/CheckSymbolExists.c.o   -c /home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec2075280555
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2075280555.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec2075280555.dir/CheckSymbolExists.c.o  -o cmTryCompileExec2075280555 -rdynamic 
+CMakeFiles/cmTryCompileExec2075280555.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTryCompileExec2075280555.dir/build.make:88: recipe for target 'cmTryCompileExec2075280555' failed
+make[1]: Leaving directory '/home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec2075280555] Error 1
+Makefile:117: recipe for target 'cmTryCompileExec2075280555/fast' failed
+make: *** [cmTryCompileExec2075280555/fast] Error 2
+
+File /home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec4026349100/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec4026349100.dir/build.make CMakeFiles/cmTryCompileExec4026349100.dir/build
+make[1]: Entering directory '/home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec4026349100.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec4026349100.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec4026349100
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec4026349100.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec4026349100.dir/CheckFunctionExists.c.o  -o cmTryCompileExec4026349100 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTryCompileExec4026349100.dir/build.make:88: recipe for target 'cmTryCompileExec4026349100' failed
+make[1]: Leaving directory '/home/ro/Music/Desktop/algo1/Algo1TPI-master/Algo1TPI/build/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec4026349100] Error 1
+Makefile:117: recipe for target 'cmTryCompileExec4026349100/fast' failed
+make: *** [cmTryCompileExec4026349100/fast] Error 2
+
+

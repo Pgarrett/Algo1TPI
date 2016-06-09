@@ -17,7 +17,7 @@ std::ostream & operator<<(std::ostream &os, const Parcela &p)
   if(p == Casa) os << "Casa";
   if(p == Granero) os << "Granero";
   if(p == Cultivo) os << "Cultivo";
-	return os;
+  return os;
 }
 
 std::ostream & operator<<(std::ostream & os, const Posicion & p)

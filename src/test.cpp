@@ -7,7 +7,7 @@
 #include "drone.h"
 #include "sistema.h"
 
-#include "aux.cpp"
+#include "auxiliares.cpp"
 
 using namespace std;
 
@@ -56,11 +56,9 @@ inline void drone_test()
   Drone d(1, ps);
   d.guardar(cout);
   Drone d2 = d;
-  d.sacarProducto(Plaguicida);
-  d.guardar(cout);
-  cout << (d==d) << (d==d2);
+  cout << "Expected true: " << (d==d) << (d==d2);
   d2.sacarProducto(Plaguicida);
-  cout << (d==d) << (d==d2);
+  cout << "Expected false: " << (d==d2);
 
   Posicion p(1,2);
   d.moverA(p);

@@ -1,5 +1,5 @@
-#ifndef AUXILIARES_H
-#define AUXILIARES_H
+#ifndef AUX_H
+#define AUX_H
 
 #include "tipos.h"
 

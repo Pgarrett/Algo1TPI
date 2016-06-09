@@ -26,10 +26,8 @@ inline bool mismos(const Secuencia<T> & v1, const Secuencia<T> & v2)
     return false;
 
   for(unsigned int i=0; i<v1.size(); i++)
-  {
     if(cuenta(v1, v1[i]) != cuenta(v2, v1[i]))
       return false;
-  }
 
   return true;
 }

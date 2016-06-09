@@ -6,11 +6,6 @@ using namespace std;
 
 Campo::Campo()
 {
-    _dimension.ancho = 3;
-    _dimension.largo = 3;
-    _grilla = Grilla<Parcela>(_dimension);
-    _grilla.parcelas[2][0] = Granero;
-    _grilla.parcelas[1][1] = Casa;
 }
 
 Campo::Campo(const Posicion &posG, const Posicion &posC, Dimension dimension) {
@@ -65,8 +60,7 @@ void Campo::guardar(std::ostream &os) const
   os << "[";
   for(int i=0; i<_dimension.ancho; i++)
   {
-    os << "[";
-    os << this->_grilla.parcelas[i][0];
+    os << "[" << _grilla.parcelas[i][0];
 
     for(int j=1; j<_dimension.largo; j++)
     {

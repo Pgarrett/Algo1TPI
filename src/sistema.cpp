@@ -2,7 +2,7 @@
 #include <sstream>
 
 #include "sistema.h"
-#include "aux.cpp"
+#include "auxiliares.cpp"
 
 using namespace std;
 
@@ -332,7 +332,7 @@ Secuencia<Posicion> Sistema::parcelasVecinas(Posicion p)
 
 Secuencia<Posicion> Sistema::parcelasVecinasConPlaga(Posicion p)
 {
-  Secuencia<Posicion> result = Secuencia<Posicion>;
+  Secuencia<Posicion> result = Secuencia<Posicion>();
   Secuencia<Posicion> vecinas = parcelasVecinas(p);
 
   for(unsigned int i = 0; i < vecinas.size(); i++)

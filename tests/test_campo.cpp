@@ -13,6 +13,15 @@ bool alcanzableEn100(Campo c, Posicion posG) {
     return true;
 }
 
+TEST(test_campo, crear_campo_caso_limite_no_rompe_invariante) {
+    Posicion posG {0, 0};
+    Campo c1(posG, {0, 1});
+    EXPECT_GT(c1.dimensiones().ancho * c1.dimensiones().largo, 2);
+    EXPECT_EQ(Granero, c1.contenido({0, 0}));
+    EXPECT_EQ(Casa, c1.contenido({0, 1}));
+    EXPECT_TRUE(alcanzableEn100(c1, posG));
+}
+
 TEST(test_campo, crear_campo_y_sus_observadores_funcionan_ok) {
     Posicion posG {5, 10};
     Campo c1(posG, {8, 12});

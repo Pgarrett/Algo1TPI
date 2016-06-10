@@ -93,6 +93,7 @@ bool Sistema::listoParaCosechar() const
     i++;
   }
   
+  // Como hay al menos una parcela con cultivo por invariante, esta division se puede hacer.
   return ((double)cultivosCosechables/(double)parcelasConCultivo) >= 0.9;
 }
 

@@ -115,24 +115,28 @@ TEST(test_sistema_fertilizar_por_filas, fertiliza_hasta_sin_fertilizante_ok) {
     EXPECT_EQ(d1.productosDisponibles().size(), 0);
 }
 
-/*TEST(test_sistema_fertilizar_por_filas, los_drones_en_vuelo_deben_hacer_su_recorrido_maximo_a_la_izquierda) {
+TEST(test_sistema_fertilizar_por_filas, las_parcelas_a_la_derecha_de_un_drone_no_deben_modificarse) {
     Posicion posG = {0, 0};
-    Campo el_campo(posG, {2, 2});
-    Drone elDrone = Drone(1, algunos_productos());
-    elDrone.cambiarPosicionActual({1, 1});
-
+    Campo el_campo(posG, {3, 3});
+    Drone elDrone = Drone(1, {Fertilizante, Plaguicida, Herbicida});
+    elDrone.moverA({2, 2});
     Sistema s1(el_campo, {elDrone});
 
     s1.fertilizarPorFilas();
 
-     
-}*/
+    EXPECT_EQ(NoSensado, s1.estadoDelCultivo({3,2}));
+}
 
-//TEST(test_sistema_fertilizar_por_filas, las_parcelas_a_la_derecha_de_un_drone_no_deben_modificarse) { }
+TEST(test_sistema_fertilizar_por_filas, las_parcelas_a_fuera_del_recorrido_maximo_deben_quedar_igual) {
+    Posicion posG = {0, 0};
+    Campo el_campo(posG, {3, 3});
+    Drone elDrone = Drone(1, {Fertilizante, Plaguicida, Herbicida});
+    elDrone.moverA({2, 2});
+    Sistema s1(el_campo, {elDrone});
 
-//TEST(test_sistema_fertilizar_por_filas, las_parcelas_a_fuera_del_recorrido_maximo_deben_quedar_igual) { }
+    s1.fertilizarPorFilas();
 
-//TEST(test_sistema_fertilizar_por_filas, los_cultivos_que_no_son_recien_sembrados_o_en_crecimiento_quedan_igual) { }
-
-//TEST(test_sistema_fertilizar_por_filas, los_cultivos_que_son_recien_sembrados_o_en_crecimiento_pasan_a_listo_para_cosechar) { }
+    EXPECT_EQ(NoSensado, s1.estadoDelCultivo({1,2}));
+}
+   
 

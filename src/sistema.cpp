@@ -114,7 +114,7 @@ void Sistema::fertilizarPorFilas()
 {
   for(unsigned int i=0; i<_enjambre.size(); i++)
   {
-    Drone d = _enjambre[i];
+    Drone& d = _enjambre[i];
     if(d.enVuelo())
       fertilizarFila(d);
   }
@@ -380,7 +380,7 @@ Drone & Sistema::dronePorId(ID id)
       return _enjambre[i];
 }
 
-void Sistema::fertilizarFila(Drone d)
+void Sistema::fertilizarFila(Drone& d)
 {
   if(tieneProducto(d, Fertilizante) && _campo.contenido(d.posicionActual()) == Cultivo)
     fertilizarPosicionActual(d);

@@ -44,7 +44,7 @@ class Sistema
     Secuencia<Posicion> parcelasVecinasConMaleza(Posicion p);
     Secuencia<Posicion> parcelasVecinasLibres(Posicion p);
     Drone & dronePorId(ID id);
-    void fertilizarFila(Drone d);
+    void fertilizarFila(Drone& d);
     void aplicarProductoEnPosicionActual(Drone d, Producto p);
     void fertilizarPosicionActual(Drone d);
 

@@ -102,7 +102,7 @@ void Sistema::aterrizarYCargarBaterias(Carga b)
   {
     if(_enjambre[i].bateria() < b)
     {
-      Drone d = _enjambre[i];
+      Drone& d = _enjambre[i];
       d.setBateria(100);
       d.moverA(posicionGranero());
       d.borrarVueloRealizado();

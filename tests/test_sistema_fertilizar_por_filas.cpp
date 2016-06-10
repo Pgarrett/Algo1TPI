@@ -33,7 +33,8 @@ TEST(test_sistema_fertilizar_por_filas, debe_quedar_la_misma_cantidad_de_drones)
 }
 
 TEST(test_sistema_fertilizar_por_filas, los_drones_en_el_granero_no_deben_modificarse) {
-    Campo el_campo({0, 0}, {2, 2});
+    Posicion posG = {0, 0};
+    Campo el_campo(posG, {2, 2});
     Secuencia<Drone> ds = algunos_drones_en_granero(posG);
     Sistema s1(el_campo, ds);
 
@@ -65,6 +66,4 @@ TEST(test_sistema_fertilizar_por_filas, los_drones_en_el_granero_no_deben_modifi
 //TEST(test_sistema_fertilizar_por_filas, los_cultivos_que_no_son_recien_sembrados_o_en_crecimiento_quedan_igual) { }
 
 //TEST(test_sistema_fertilizar_por_filas, los_cultivos_que_son_recien_sembrados_o_en_crecimiento_pasan_a_listo_para_cosechar) { }
-
-}
 

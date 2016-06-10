@@ -385,16 +385,18 @@ void Sistema::fertilizarFila(Drone& d)
 {
   if(tieneProducto(d, Fertilizante) && _campo.contenido(d.posicionActual()) == Cultivo)
     fertilizarPosicionActual(d);
-
-  while(d.posicionActual().x > 0 && tieneProducto(d, Fertilizante) && d.bateria() > 0
-        && _campo.contenido(d.posicionActual()) == Cultivo)
+    
+  // Si esta en el granero, como en esa posicion no contiene cultivo, no avanza. 
+  // Asi esta definido en la spec por el intervalo cerrado en el auxiliar parcelasLibres.
+  while(d.posicionActual().x > 0 && tieneProducto(d, Fertilizante) && d.bateria() > 0 && _campo.contenido(d.posicionActual()) == Cultivo)
   {
     d.moverA(d.posicionActual()-Posicion(1,0));
     d.setBateria(d.bateria()-1);
 
-    if(_campo.contenido(d.posicionActual()) == Cultivo)
+    if(tieneProducto(d, Fertilizante) && _campo.contenido(d.posicionActual()) == Cultivo)
       fertilizarPosicionActual(d);
   }
+ 
 }
 
 void Sistema::aplicarProductoEnPosicionActual(Drone & d, Producto p)

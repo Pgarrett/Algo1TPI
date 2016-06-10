@@ -66,6 +66,55 @@ TEST(test_sistema_fertilizar_por_filas, fertiliza_hasta_el_final_ok) {
     EXPECT_EQ(s1.estadoDelCultivo({1,0}), ListoParaCosechar);
 }
 
+TEST(test_sistema_fertilizar_por_filas, fertiliza_hasta_la_casa_ok) {
+    Posicion posG = {3, 0};
+    Campo el_campo(posG, {0, 0});
+    Drone d(1, {Fertilizante, Fertilizante, Fertilizante});
+    Secuencia<Drone> ds = {d};
+    Sistema s1(el_campo, ds);
+    
+    Drone & d1 = s1._enjambre[0];
+    d1.moverA({2, 0});
+
+    s1.fertilizarPorFilas();
+
+    EXPECT_EQ(d1.posicionActual(), Posicion(0,0));
+    EXPECT_EQ(d1.productosDisponibles().size(), 1);
+}
+
+TEST(test_sistema_fertilizar_por_filas, fertiliza_hasta_sin_bateria_ok) {
+    Posicion posG = {4, 0};
+    Campo el_campo(posG, {0, 1});
+    Drone d(1, {Fertilizante, Fertilizante});
+    Secuencia<Drone> ds = {d};
+    Sistema s1(el_campo, ds);
+    
+    Drone & d1 = s1._enjambre[0];
+    d1.moverA({3, 0});
+    d1.setBateria(1);
+
+    s1.fertilizarPorFilas();
+
+    EXPECT_EQ(d1.posicionActual(), Posicion(2,0));
+    EXPECT_EQ(d1.productosDisponibles().size(), 0);
+}
+
+TEST(test_sistema_fertilizar_por_filas, fertiliza_hasta_sin_fertilizante_ok) {
+    Posicion posG = {3, 0};
+    Campo el_campo(posG, {0, 1});
+    Drone d(1, {Fertilizante});
+    Secuencia<Drone> ds = {d};
+    Sistema s1(el_campo, ds);
+    
+    Drone & d1 = s1._enjambre[0];
+    d1.moverA({2, 0});
+
+    s1.fertilizarPorFilas();
+
+    EXPECT_EQ(d1.posicionActual(), Posicion(2,0));
+    EXPECT_EQ(d1.productosDisponibles().size(), 0);
+}
+
 /*TEST(test_sistema_fertilizar_por_filas, los_drones_en_vuelo_deben_hacer_su_recorrido_maximo_a_la_izquierda) {
     Posicion posG = {0, 0};
     Campo el_campo(posG, {2, 2});

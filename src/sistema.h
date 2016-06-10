@@ -64,6 +64,9 @@ class Sistema
     friend class test_sistema_listo_para_cosechar_si_es_mas_del_90_por_ciento_retorna_true_Test;
     friend class test_sistema_volar_y_sensar_todo_libre_Test;
     friend class test_sistema_fertilizar_por_filas_fertiliza_hasta_el_final_ok_Test;
+    friend class test_sistema_fertilizar_por_filas_fertiliza_hasta_la_casa_ok_Test;
+    friend class test_sistema_fertilizar_por_filas_fertiliza_hasta_sin_bateria_ok_Test;
+    friend class test_sistema_fertilizar_por_filas_fertiliza_hasta_sin_fertilizante_ok_Test;
 };
 
 // Definirlo usando mostrar, para poder usar << con este tipo.

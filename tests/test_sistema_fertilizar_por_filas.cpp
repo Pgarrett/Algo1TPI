@@ -46,6 +46,26 @@ TEST(test_sistema_fertilizar_por_filas, los_drones_en_el_granero_no_deben_modifi
     }
 }
 
+TEST(test_sistema_fertilizar_por_filas, fertiliza_hasta_el_final_ok) {
+    Posicion posG = {1, 1};
+    Campo el_campo(posG, {2, 2});
+    Drone d(1, {Fertilizante, Fertilizante});
+    Secuencia<Drone> ds = {d};
+    Sistema s1(el_campo, ds);
+    
+    Drone & d1 = s1._enjambre[0];
+    d1.moverA({1, 0});
+    s1._estado.parcelas[0][0] = EnCrecimiento;
+    s1._estado.parcelas[1][0] = RecienSembrado;
+
+    s1.fertilizarPorFilas();
+
+    EXPECT_EQ(d1.posicionActual(), Posicion(0,0));
+    EXPECT_EQ(d1.productosDisponibles().size(), 0);
+    EXPECT_EQ(s1.estadoDelCultivo({0,0}), ListoParaCosechar);
+    EXPECT_EQ(s1.estadoDelCultivo({1,0}), ListoParaCosechar);
+}
+
 /*TEST(test_sistema_fertilizar_por_filas, los_drones_en_vuelo_deben_hacer_su_recorrido_maximo_a_la_izquierda) {
     Posicion posG = {0, 0};
     Campo el_campo(posG, {2, 2});

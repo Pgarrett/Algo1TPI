@@ -397,7 +397,7 @@ void Sistema::fertilizarFila(Drone& d)
   }
 }
 
-void Sistema::aplicarProductoEnPosicionActual(Drone d, Producto p)
+void Sistema::aplicarProductoEnPosicionActual(Drone & d, Producto p)
 {
   d.sacarProducto(p);
   Posicion pos = d.posicionActual();
@@ -412,7 +412,7 @@ void Sistema::aplicarProductoEnPosicionActual(Drone d, Producto p)
   }
 }
 
-void Sistema::fertilizarPosicionActual(Drone d)
+void Sistema::fertilizarPosicionActual(Drone & d)
 {
   d.sacarProducto(Fertilizante);
   Posicion pos = d.posicionActual();

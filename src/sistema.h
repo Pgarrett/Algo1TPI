@@ -45,8 +45,8 @@ class Sistema
     Secuencia<Posicion> parcelasVecinasLibres(Posicion p);
     Drone & dronePorId(ID id);
     void fertilizarFila(Drone& d);
-    void aplicarProductoEnPosicionActual(Drone d, Producto p);
-    void fertilizarPosicionActual(Drone d);
+    void aplicarProductoEnPosicionActual(Drone & d, Producto p);
+    void fertilizarPosicionActual(Drone & d);
 
     bool tieneProducto(Drone d, Producto p);
     Secuencia<Producto> productosAplicables(EstadoCultivo ec);
@@ -63,6 +63,7 @@ class Sistema
     friend class test_sistema_listo_para_cosechar_si_es_exactamente_el_90_por_ciento_retorna_true_Test;
     friend class test_sistema_listo_para_cosechar_si_es_mas_del_90_por_ciento_retorna_true_Test;
     friend class test_sistema_volar_y_sensar_todo_libre_Test;
+    friend class test_sistema_fertilizar_por_filas_fertiliza_hasta_el_final_ok_Test;
 };
 
 // Definirlo usando mostrar, para poder usar << con este tipo.
